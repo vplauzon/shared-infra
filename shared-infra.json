@@ -13,12 +13,14 @@
                 "description": "Secret of the Service Principal"
             },
             "type": "securestring"
-        }    },
+        }
+    },
     "variables": {
         "kubernetes version": "1.9.6",
-        "dnsPrefix": "vpl-cluster",
-        "VM Size":"Standard_B2ms",
-        "instance count": 1
+        "dnsPrefix": "vpl-cluster2",
+        "VM Size": "Standard_B2ms",
+        "instance count": 1,
+        "ssh public key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3lGYborNepj+6A1/HSLjvjJt26X8AByamYkctizPBm+fw8CKb6hPZ0bDpzGQrqd9eyFEYIhxc85rgQJoAdT7ta0DqPv7nuvxWQW7eaROuP3TD2LoJ5zA7gX0buE+91N/tNzxaBKmxt4he12p2ZvrQNchw8xjvr4pGPS3ZFNe8tDqinZRUak5Jh1vwkatrMixeGMxrxXw8FqeS3poQ3WndagWq0aBFgXB+5GVS7YlelQvYG+7f68douwIsfF8hAxbbjNRyH5eWAPDNAT1RNK4m7Tr7RyJpQXSKf3TMtUGSPnf0A5q4StODCFyBUTMANzN042Cve5N4uBtxgK7SdgO9 vplauzon@MININT-BK6A5VR"
     },
     "resources": [
         {
@@ -29,9 +31,9 @@
             "properties": {
                 "kubernetesVersion": "[variables('kubernetes version')]",
                 "dnsPrefix": "[variables('dnsPrefix')]",
-                "servicePrincipalProfile":{
-                    "clientId":"[parameters('Service Principal ID')]",
-                    "secret":"[parameters('Service Principal Secret')]"
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('Service Principal ID')]",
+                    "secret": "[parameters('Service Principal Secret')]"
                 },
                 "agentPoolProfiles": [
                     {
@@ -41,7 +43,17 @@
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     }
-                ]
+                ],
+                "linuxProfile": {
+                    "adminUsername": "hidden-admin",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[variables('ssh public key')]"
+                            }
+                        ]
+                    }
+                }
             }
         }
     ],

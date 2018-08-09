@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Service Principal ID": {
+            "metadata": {
+                "description": "Client ID of the Service Principal"
+            },
+            "type": "string"
+        },
+        "Service Principal Secret": {
+            "metadata": {
+                "description": "Secret of the Service Principal"
+            },
+            "type": "securestring"
+        }    },
+    "variables": {
+        "kubernetes version": "1.9.6",
+        "dnsPrefix": "vpl-cluster",
+        "VM Size":"Standard_B2ms",
+        "instance count": 1
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "name": "cluster",
+            "apiVersion": "2018-03-31",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "kubernetesVersion": "[variables('kubernetes version')]",
+                "dnsPrefix": "[variables('dnsPrefix')]",
+                "servicePrincipalProfile":{
+                    "clientId":"[parameters('Service Principal ID')]",
+                    "secret":"[parameters('Service Principal Secret')]"
+                },
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "count": "[variables('instance count')]",
+                        "vmSize": "[variables('VM Size')]",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "controlPlaneFQDN": {
+            "type": "string",
+            "value": "[reference('cluster').fqdn]"
+        }
+    }
+}

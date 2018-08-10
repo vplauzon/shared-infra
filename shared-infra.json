@@ -2,9 +2,15 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "Service Principal ID": {
+        "Service Principal App ID": {
             "metadata": {
-                "description": "Client ID of the Service Principal"
+                "description": "App ID of the Service Principal"
+            },
+            "type": "string"
+        },
+        "Service Principal Object ID": {
+            "metadata": {
+                "description": "Object ID of the Service Principal"
             },
             "type": "string"
         },
@@ -19,7 +25,7 @@
         "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
         "VNET Name": "cluster-vnet",
         "kubernetes version": "1.9.6",
-        "dnsPrefix": "vpl-cluster2",
+        "dnsPrefix": "vpl-cluster",
         "VM Size": "Standard_B2ms",
         "instance count": 1,
         "ssh public key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3lGYborNepj+6A1/HSLjvjJt26X8AByamYkctizPBm+fw8CKb6hPZ0bDpzGQrqd9eyFEYIhxc85rgQJoAdT7ta0DqPv7nuvxWQW7eaROuP3TD2LoJ5zA7gX0buE+91N/tNzxaBKmxt4he12p2ZvrQNchw8xjvr4pGPS3ZFNe8tDqinZRUak5Jh1vwkatrMixeGMxrxXw8FqeS3poQ3WndagWq0aBFgXB+5GVS7YlelQvYG+7f68douwIsfF8hAxbbjNRyH5eWAPDNAT1RNK4m7Tr7RyJpQXSKf3TMtUGSPnf0A5q4StODCFyBUTMANzN042Cve5N4uBtxgK7SdgO9 vplauzon@MININT-BK6A5VR"
@@ -50,14 +56,14 @@
         },
         {
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2017-05-01",
+            "apiVersion": "2017-09-01",
             "name": "[guid(subscription().subscriptionId)]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('Network Contributor Role')]",
-                "principalId": "[parameters('Service Principal ID')]",
+                "principalId": "[parameters('Service Principal Object ID')]",
                 "scope": "[resourceGroup().id]"
             }
         },
@@ -73,7 +79,7 @@
                 "kubernetesVersion": "[variables('kubernetes version')]",
                 "dnsPrefix": "[variables('dnsPrefix')]",
                 "servicePrincipalProfile": {
-                    "clientId": "[parameters('Service Principal ID')]",
+                    "clientId": "[parameters('Service Principal App ID')]",
                     "secret": "[parameters('Service Principal Secret')]"
                 },
                 "agentPoolProfiles": [

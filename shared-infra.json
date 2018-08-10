@@ -16,6 +16,8 @@
         }
     },
     "variables": {
+        "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+        "VNET Name": "cluster-vnet",
         "kubernetes version": "1.9.6",
         "dnsPrefix": "vpl-cluster2",
         "VM Size": "Standard_B2ms",
@@ -24,10 +26,49 @@
     },
     "resources": [
         {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('VNet Name')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "172.16.0.0/18"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "aks",
+                        "properties": {
+                            "addressPrefix": "172.16.0.0/20"
+                        }
+                    }
+                ]
+            },
+            "resources": []
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2017-05-01",
+            "name": "[guid(subscription().subscriptionId)]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('Network Contributor Role')]",
+                "principalId": "[parameters('Service Principal ID')]",
+                "scope": "[resourceGroup().id]"
+            }
+        },
+        {
             "type": "Microsoft.ContainerService/managedClusters",
             "name": "cluster",
             "apiVersion": "2018-03-31",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
+            ],
             "properties": {
                 "kubernetesVersion": "[variables('kubernetes version')]",
                 "dnsPrefix": "[variables('dnsPrefix')]",
@@ -40,6 +81,8 @@
                         "name": "agentpool",
                         "count": "[variables('instance count')]",
                         "vmSize": "[variables('VM Size')]",
+                        "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('VNET Name'), 'aks')]",
+                        "maxPods": 30,
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     }
@@ -54,6 +97,17 @@
                         ]
                     }
                 }
+                /*
+                ,
+                "networkProfile": {
+                    "networkPlugin": "azure",
+                    "networkPolicy": "calico",
+                    "podCidr": "172.16.0.0/21",
+                    "serviceCidr": "172.16.8.0/22",
+                    "dnsServiceIP": "172.16.8.0",
+                    "dockerBridgeCidr": "172.17.0.1/16"
+                }
+                */
             }
         }
     ],

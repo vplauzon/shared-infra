@@ -2,6 +2,19 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ssh Public Key": {
+            "metadata": {
+                "description": "SSH Public Key"
+            },
+            "type": "securestring"
+        },
+        "Instance Count": {
+            "metadata": {
+                "description": "DNS Prefix for the cluster"
+            },
+            "defaultValue": 2,
+            "type": "int"
+        },
         "DNS Prefix": {
             "metadata": {
                 "description": "DNS Prefix for the cluster"
@@ -42,6 +55,12 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "ssh Public Key": {
+                        "value": "[parameters('ssh Public Key')]"
+                    },
+                    "Instance Count": {
+                        "value": "[parameters('Instance Count')]"
+                    },
                     "DNS Prefix": {
                         "value": "[parameters('DNS Prefix')]"
                     },
@@ -58,6 +77,5 @@
             }
         }
     ],
-    "outputs": {
-    }
+    "outputs": {}
 }

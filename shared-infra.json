@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "DNS Prefix": {
+            "metadata": {
+                "description": "DNS Prefix for the cluster"
+            },
+            "type": "string"
+        },
         "Service Principal App ID": {
             "metadata": {
                 "description": "App ID of the Service Principal"
@@ -22,105 +28,36 @@
         }
     },
     "variables": {
-        "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
-        "VNET Name": "cluster-vnet",
-        "kubernetes version": "1.9.6",
-        "dnsPrefix": "vpl-cluster",
-        "VM Size": "Standard_B2ms",
-        "instance count": 1,
-        "ssh public key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3lGYborNepj+6A1/HSLjvjJt26X8AByamYkctizPBm+fw8CKb6hPZ0bDpzGQrqd9eyFEYIhxc85rgQJoAdT7ta0DqPv7nuvxWQW7eaROuP3TD2LoJ5zA7gX0buE+91N/tNzxaBKmxt4he12p2ZvrQNchw8xjvr4pGPS3ZFNe8tDqinZRUak5Jh1vwkatrMixeGMxrxXw8FqeS3poQ3WndagWq0aBFgXB+5GVS7YlelQvYG+7f68douwIsfF8hAxbbjNRyH5eWAPDNAT1RNK4m7Tr7RyJpQXSKf3TMtUGSPnf0A5q4StODCFyBUTMANzN042Cve5N4uBtxgK7SdgO9 vplauzon@MININT-BK6A5VR"
+        "AKS Cluster Template URL": "https://raw.githubusercontent.com/vplauzon/aks/master/aks-kubenet/deploy.json"
     },
     "resources": [
         {
-            "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2017-10-01",
-            "name": "[variables('VNet Name')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [],
+            "name": "Cluster",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
             "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "172.16.0.0/18"
-                    ]
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('AKS Cluster Template URL')]",
+                    "contentVersion": "1.0.0.0"
                 },
-                "subnets": [
-                    {
-                        "name": "aks",
-                        "properties": {
-                            "addressPrefix": "172.16.0.0/20"
-                        }
-                    }
-                ]
-            },
-            "resources": []
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2017-09-01",
-            "name": "[guid(subscription().subscriptionId)]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('Network Contributor Role')]",
-                "principalId": "[parameters('Service Principal Object ID')]",
-                "scope": "[resourceGroup().id]"
-            }
-        },
-        {
-            "type": "Microsoft.ContainerService/managedClusters",
-            "name": "cluster",
-            "apiVersion": "2018-03-31",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
-            ],
-            "properties": {
-                "kubernetesVersion": "[variables('kubernetes version')]",
-                "dnsPrefix": "[variables('dnsPrefix')]",
-                "servicePrincipalProfile": {
-                    "clientId": "[parameters('Service Principal App ID')]",
-                    "secret": "[parameters('Service Principal Secret')]"
-                },
-                "agentPoolProfiles": [
-                    {
-                        "name": "agentpool",
-                        "count": "[variables('instance count')]",
-                        "vmSize": "[variables('VM Size')]",
-                        "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('VNET Name'), 'aks')]",
-                        "maxPods": 30,
-                        "osType": "Linux",
-                        "storageProfile": "ManagedDisks"
-                    }
-                ],
-                "linuxProfile": {
-                    "adminUsername": "hidden-admin",
-                    "ssh": {
-                        "publicKeys": [
-                            {
-                                "keyData": "[variables('ssh public key')]"
-                            }
-                        ]
+                "parameters": {
+                    "DNS Prefix": {
+                        "value": "[parameters('DNS Prefix')]"
+                    },
+                    "Service Principal App ID": {
+                        "value": "[parameters('Service Principal App ID')]"
+                    },
+                    "Service Principal Object ID": {
+                        "value": "[parameters('Service Principal Object ID')]"
+                    },
+                    "Service Principal Secret": {
+                        "value": "[parameters('Service Principal Secret')]"
                     }
                 }
-                /*
-                ,
-                "networkProfile": {
-                    "networkPlugin": "azure",
-                    "networkPolicy": "calico",
-                    "podCidr": "172.16.0.0/21",
-                    "serviceCidr": "172.16.8.0/22",
-                    "dnsServiceIP": "172.16.8.0",
-                    "dockerBridgeCidr": "172.17.0.1/16"
-                }
-                */
             }
         }
     ],
     "outputs": {
-        "controlPlaneFQDN": {
-            "type": "string",
-            "value": "[reference('cluster').fqdn]"
-        }
     }
 }

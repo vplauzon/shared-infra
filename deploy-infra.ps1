@@ -2,7 +2,7 @@
 
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
-    [string] $ResourceGroupName = 'SpeechRecognition',
+    [string] $ResourceGroupName = 'shared-infra',
     [string] $TemplateFile = 'shared-infra.json',
     [string] $TemplateParametersFile = 'shared-infra.parameters.json',
     [switch] $ValidateOnly

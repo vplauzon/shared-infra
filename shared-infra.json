@@ -2,46 +2,21 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "ssh Public Key": {
+        "vault-id": {
             "metadata": {
-                "description": "SSH Public Key"
-            },
-            "type": "securestring"
-        },
-        "Instance Count": {
-            "metadata": {
-                "description": "DNS Prefix for the cluster"
-            },
-            "defaultValue": 2,
-            "type": "int"
-        },
-        "DNS Prefix": {
-            "metadata": {
-                "description": "DNS Prefix for the cluster"
+                "description": "Resource ID of the Azure Vault"
             },
             "type": "string"
         },
-        "Service Principal App ID": {
+        "environment": {
             "metadata": {
-                "description": "App ID of the Service Principal"
+                "description": "Deployment environment ; used in the vault's secret names"
             },
             "type": "string"
-        },
-        "Service Principal Object ID": {
-            "metadata": {
-                "description": "Object ID of the Service Principal"
-            },
-            "type": "string"
-        },
-        "Service Principal Secret": {
-            "metadata": {
-                "description": "Secret of the Service Principal"
-            },
-            "type": "securestring"
         }
     },
     "variables": {
-        "AKS Cluster Template URL": "https://raw.githubusercontent.com/vplauzon/aks/master/aks-kubenet/deploy.json"
+        "AKS Cluster Template URL": "https://github.com/vplauzon/shared-infra/raw/master/cluster.json"
     },
     "resources": [
         {
@@ -56,22 +31,44 @@
                 },
                 "parameters": {
                     "ssh Public Key": {
-                        "value": "[parameters('ssh Public Key')]"
-                    },
-                    "Instance Count": {
-                        "value": "[parameters('Instance Count')]"
+                        "reference": {
+                            "keyVault": {
+                                "id": "[parameters('vault-id')]"
+                            },
+                            "secretName": "[concat(parameters('environment'),'-shared-infra-ssh-public-key')]"
+                        }
                     },
                     "DNS Prefix": {
-                        "value": "[parameters('DNS Prefix')]"
+                        "reference": {
+                            "keyVault": {
+                                "id": "[parameters('vault-id')]"
+                            },
+                            "secretName": "[concat(parameters('environment'),'-shared-infra-dns-prefix')]"
+                        }
                     },
                     "Service Principal App ID": {
-                        "value": "[parameters('Service Principal App ID')]"
+                        "reference": {
+                            "keyVault": {
+                                "id": "[parameters('vault-id')]"
+                            },
+                            "secretName": "[concat(parameters('environment'),'-shared-infra-app-id')]"
+                        }
                     },
                     "Service Principal Object ID": {
-                        "value": "[parameters('Service Principal Object ID')]"
+                        "reference": {
+                            "keyVault": {
+                                "id": "[parameters('vault-id')]"
+                            },
+                            "secretName": "[concat(parameters('environment'),'-shared-infra-object-id')]"
+                        }
                     },
                     "Service Principal Secret": {
-                        "value": "[parameters('Service Principal Secret')]"
+                        "reference": {
+                            "keyVault": {
+                                "id": "[parameters('vault-id')]"
+                            },
+                            "secretName": "[concat(parameters('environment'),'-shared-infra-password')]"
+                        }
                     }
                 }
             }

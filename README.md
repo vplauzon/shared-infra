@@ -4,9 +4,13 @@ Shared Infrastructure for different repos
 
 See [AKS Provisioning](https://github.com/vplauzon/aks/tree/master/aks-kubenet) for main inspiration on AKS.
 
-# VNET
+# Access rights
 
-The VNET IP address needs to be compatible with [RFC 1918](https://en.wikipedia.org/wiki/Private_network) following the [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) notation.
+The identity deployment the template must be able to perform role assignment.
+
+Typically, only owners can do that.
+
+If using Azure Dev Ops, a Service Principal is created to deploy the solution.  That service principal must have that priviledge.
 
 # Create SSH key
 

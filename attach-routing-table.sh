@@ -1,7 +1,7 @@
-#!/bin/bash
-
 #   Bind script parameters
 rg=$1
+
+echo "Resource Group:" $rg
 
 #   Get the Node Resource Group:  the RG with actual resources
 nrg=$(az aks show --resource-group $rg --name cluster --query nodeResourceGroup -o tsv)

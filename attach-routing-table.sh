@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #   Bind script parameters
 rg=$1
 

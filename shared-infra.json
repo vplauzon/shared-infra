@@ -38,6 +38,9 @@
                             "secretName": "[concat(parameters('environment'),'-shared-infra-ssh-public-key')]"
                         }
                     },
+                    "Cluster Name": {
+                        "value": "[concat('cluster-', parameters('environment'))]"
+                    },
                     "DNS Prefix": {
                         "reference": {
                             "keyVault": {

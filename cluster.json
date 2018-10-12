@@ -8,6 +8,13 @@
             },
             "type": "securestring"
         },
+        "Cluster Name": {
+            "metadata": {
+                "description": "DNS Prefix for the cluster"
+            },
+            "defaultValue": "cluster-default",
+            "type": "string"
+        },
         "Instance Count": {
             "metadata": {
                 "description": "DNS Prefix for the cluster"
@@ -111,7 +118,7 @@
         },
         {
             "type": "Microsoft.ContainerService/managedClusters",
-            "name": "cluster",
+            "name": "[parameters('Cluster Name')]",
             "apiVersion": "2018-03-31",
             "location": "[resourceGroup().location]",
             "dependsOn": [
@@ -163,7 +170,7 @@
     "outputs": {
         "controlPlaneFQDN": {
             "type": "string",
-            "value": "[reference('cluster').fqdn]"
+            "value": "[reference(parameters('Cluster Name')).fqdn]"
         }
     }
 }

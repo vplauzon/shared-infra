@@ -1,8 +1,7 @@
-$rg = $(echo "shared-infra-$environment")
-$publicIp = $(echo "main-ip-$environment")
+$rg = $1
+$publicIp = $2
 
 #   Display variables
-echo "Environment:  $environment"
 echo "Resource group:  $rg"
 echo "Public IP:  $publicIp"
 

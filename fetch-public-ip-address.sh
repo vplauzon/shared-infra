@@ -1,3 +1,4 @@
+#   Bind script parameters
 rg=$1
 publicIp=$2
 

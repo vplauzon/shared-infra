@@ -128,9 +128,6 @@
                 "kubernetesVersion": "[variables('kubernetes version')]",
                 "dnsPrefix": "[parameters('DNS Prefix')]",
                 "addonProfiles": {
-                    "httpApplicationRouting": {
-                        "enabled": true
-                    }
                 },
                 "servicePrincipalProfile": {
                     "clientId": "[parameters('Service Principal App ID')]",

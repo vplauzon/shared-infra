@@ -1,5 +1,5 @@
-$rg = $1
-$publicIp = $2
+rg=$1
+publicIp=$2
 
 #   Display variables
 echo "Resource group:  $rg"

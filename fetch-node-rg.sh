@@ -11,4 +11,4 @@ nodeRg=$(az aks show --resource-group $rg --name $clusterName --query nodeResour
 echo "Node Resource Group:" $nodeRg
 
 #   Pass it as an output variable
-echo "##vso[task.setvariable variable=nrg;]$nodeRg"
+echo "##vso[task.setvariable variable=nodeRg;]$nodeRg"

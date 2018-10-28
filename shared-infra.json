@@ -20,25 +20,6 @@
     },
     "resources": [
         {
-            "name": "[concat('Main-IP-', parameters('environment'))]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2018-08-01",
-            "location": "[resourceGroup().location]",
-            "tags": {},
-            "sku": {
-                "name": "Basic"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static",
-                "publicIPAddressVersion": "IPv4",
-                "dnsSettings": {
-                    "domainNameLabel": "[concat('vpl-cluster-main-ip-', parameters('environment'))]"
-                },
-                "ipTags": []
-            },
-            "zones": []
-        },
-        {
             "name": "Cluster",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",

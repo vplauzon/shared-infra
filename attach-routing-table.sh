@@ -1,14 +1,11 @@
 #   Bind script parameters
 rg=$1
 clusterName=$2
+nrg=$3
 
-echo "Resource Group:" $rg
-echo "Cluster Name:" $clusterName
-
-#   Get the Node Resource Group:  the RG with actual resources
-nrg=$(az aks show --resource-group $rg --name $clusterName --query nodeResourceGroup -o tsv)
-
-echo "Node Resource Group:" $nrg
+echo "Resource Group:  $rg"
+echo "Cluster Name:  $clusterName"
+echo "Node Resource Group:  $nrg"
 
 #   Get the routing table
 rt=$(az network route-table list -g $nrg -o tsv --query [0].id)

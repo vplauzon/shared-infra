@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment": {
+            "metadata": {
+                "description": "Deployment environment ; used in the vault's secret names"
+            },
+            "type": "string"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat('Main-IP-', parameters('environment'))]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2018-08-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "publicIPAddressVersion": "IPv4",
+                "dnsSettings": {
+                    "domainNameLabel": "[concat('vpl-cluster-main-ip-', parameters('environment'))]"
+                },
+                "ipTags": []
+            },
+            "zones": []
+        }
+    ],
+    "outputs": {}
+}

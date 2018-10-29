@@ -197,7 +197,8 @@
             "name": "[parameters('Main IP Name')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-08-01",
-            "location": "[reference(parameters('Cluster Name')).nodeResourceGroup]",
+            "location": "[resourceGroup().location]",
+            "resourceGroup": "[reference(parameters('Cluster Name')).nodeResourceGroup]",
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', parameters('Cluster Name'))]"
             ],
@@ -215,7 +216,6 @@
             },
             "zones": []
         }
-
     ],
     "outputs": {
         "controlPlaneFQDN": {

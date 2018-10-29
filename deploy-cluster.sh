@@ -11,7 +11,7 @@ echo "Environment:  $environment"
 
 #   Test if there is a cluster
 filter="[?name=='cluster-dev']".name
-clusterCount=$(az aks list -o tsv --query $filter | wc -l)
+clusterCount=$(az aks list -g $rg -o tsv --query $filter | wc -l)
 
 echo "Cluster Count:  $clusterCount"
 
@@ -21,7 +21,7 @@ then
     echo "No cluster:  first deploy"
 
     az group deployment create -g shared-infra-dev --name deploy-$(date +"%d-%m-%y--%H-%M-%S") --template-file shared-infra.json \
-     --parameters routeTableId= vault-id=$vaultId environment=$environment
+     --parameters routeTableId= vault-id="$vaultId" environment="$environment"
 fi
 
 #   Get the Node Resource Group:  the RG with actual resources
@@ -37,4 +37,4 @@ echo "Routing Table:" $rt
 echo "Deploy with routing table"
 
 az group deployment create -g shared-infra-dev --name deploy-$(date +"%d-%m-%y--%H-%M-%S") --template-file shared-infra.json \
-    --parameters routeTableId=$rt vault-id=$vaultId environment=$environment
+    --parameters routeTableId="$rt" vault-id="$vaultId" environment="$environment"

@@ -40,14 +40,14 @@ echo "Deploy with routing table"
 nrg=$(az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y-%H%M%S") \
     --template-file shared-infra.json \
     --parameters routeTableId="$rt" vault-id="$vaultId" environment="$environment" \
-    --query properties.outputs.nodeResourceGroup.value.nodeResourceGroup.value -o tsv)
+    --query properties.outputs.nodeResourceGroup.value -o tsv)
 
 echo "Node Resource Group:  $nrg"
 
 #   Deploy main ip in nrg resource group
 ip=$(az group deployment create -g "$nrg" --name deploy-$(date +"%d%m%y-%H%M%S") \
     --template-file main-ip.json --parameters environment="$environment"
-    --query properties.outputs.ipAddress.value.ipAddress -o tsv)
+    --query properties.outputs.ipAddress.value -o tsv)
 
 echo "IP Address:  $ip"
 

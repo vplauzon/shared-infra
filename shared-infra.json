@@ -90,8 +90,8 @@
     ],
     "outputs": {
         "nodeResourceGroup": {
-            "type": "object",
-            "value": "[reference(variables('Cluster Deployment Name'))]"
+            "type": "string",
+            "value": "[reference(variables('Cluster Deployment Name')).outputs.nodeResourceGroup.value]"
         }
     }
 }

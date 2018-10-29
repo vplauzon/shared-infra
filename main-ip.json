@@ -35,8 +35,8 @@
     ],
     "outputs": {
         "ipAddress": {
-            "type": "object",
-            "value": "[reference(variables('IP Name'))]"
+            "type": "string",
+            "value": "[reference(variables('IP Name')).ipAddress]"
         }
     }
 }

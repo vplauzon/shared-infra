@@ -186,29 +186,6 @@
                     "dockerBridgeCidr": "[variables('Docker Bridge Cidr')]"
                 }
             }
-        },
-        {
-            "name": "[parameters('Main IP Name')]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2018-08-01",
-            "location": "[resourceGroup().location]",
-            "resourceGroup": "[reference(parameters('Cluster Name')).nodeResourceGroup]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('Cluster Name'))]"
-            ],
-            "tags": {},
-            "sku": {
-                "name": "Basic"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static",
-                "publicIPAddressVersion": "IPv4",
-                "dnsSettings": {
-                    "domainNameLabel": "[parameters('Main IP Name')]"
-                },
-                "ipTags": []
-            },
-            "zones": []
         }
     ],
     "outputs": {

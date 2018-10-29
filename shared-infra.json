@@ -39,6 +39,9 @@
                     "Route Table Id": {
                         "value": "[parameters('routeTableId')]"
                     },
+                    "Main IP Name": {
+                        "value": "[concat('main-ip-', parameters('environment'))]"
+                    },
                     "ssh Public Key": {
                         "reference": {
                             "keyVault": {

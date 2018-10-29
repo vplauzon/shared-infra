@@ -1,16 +1,31 @@
 #   Bind script parameters
-rg=$1
-clusterName=$2
-vaultId=$3
-environment=$4
+environment=$1
+location=$2
+rg=$3
+clusterName=$4
+vaultId=$5
 
 echo "Resource Group:  $rg"
 echo "Cluster Name:  $clusterName"
 echo "Vault ID:  $vaultId"
 echo "Environment:  $environment"
 
+#   Test if there is a resource group
+filter="[?name=='$rg']".name
+rgCount=$(az group list -o tsv --query $filter | wc -l)
+
+echo "Resource Group Count:  $rgCount"
+
+#   If there is no resource group, deploy one
+if [ $rgCount -ne 1 ]
+then
+    echo "No resource group:  deploy one"
+
+    az group create -g "$rg" -l $location
+fi
+
 #   Test if there is a cluster
-filter="[?name=='cluster-dev']".name
+filter="[?name=='$clusterName']".name
 clusterCount=$(az aks list -g $rg -o tsv --query $filter | wc -l)
 
 echo "Cluster Count:  $clusterCount"

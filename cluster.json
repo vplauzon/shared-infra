@@ -131,7 +131,7 @@
                         "properties": {
                             "addressPrefix": "[variables('AKS Subnet Address Space')]",
                             "routeTable": {
-                                "id": "[parameters('Route Table Id')]"
+                                // "id": "[parameters('Route Table Id')]"
                             }
                         }
                     },
@@ -140,7 +140,7 @@
                         "properties": {
                             "addressPrefix": "[variables('Service Subnet Address Space')]",
                             "routeTable": {
-                                "id": "[parameters('Route Table Id')]"
+                                // "id": "[parameters('Route Table Id')]"
                             }
                         }
                     }

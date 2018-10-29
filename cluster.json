@@ -191,7 +191,7 @@
     "outputs": {
         "nodeResourceGroup": {
             "type": "object",
-            "value": "[reference(parameters('Cluster Name')).outputs.nodeResourceGroup.value.nodeResourceGroup]"
+            "value": "[reference(parameters('Cluster Name'))]"
         }
     }
 }

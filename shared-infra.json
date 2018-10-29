@@ -91,7 +91,7 @@
     "outputs": {
         "nodeResourceGroup": {
             "type": "object",
-            "value": "[reference(variables('Cluster Deployment Name')).outputs]"
+            "value": "[reference(variables('Cluster Deployment Name'))]"
         }
     }
 }

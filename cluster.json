@@ -82,6 +82,7 @@
         "VM Size": "Standard_B2ms"
     },
     "resources": [
+        /*
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2017-10-01",
@@ -112,6 +113,7 @@
             },
             "resources": []
         },
+        */
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2017-10-01",

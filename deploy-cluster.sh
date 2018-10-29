@@ -36,5 +36,4 @@ echo "Routing Table:" $rt
 
 echo "Deploy with routing table"
 
-az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y-%H%M%S") --template-file shared-infra.json \
-    --parameters routeTableId="$rt" vault-id="$vaultId" environment="$environment"
+az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y-%H%M%S") --template-file shared-infra.json  --parameters routeTableId="$rt" vault-id="$vaultId" environment="$environment"

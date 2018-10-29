@@ -46,7 +46,7 @@ echo "Node Resource Group:  $nrg"
 
 #   Deploy main ip in nrg resource group
 ip=$(az group deployment create -g "$nrg" --name deploy-$(date +"%d%m%y-%H%M%S") \
-    --template-file main-ip.json --parameters environment="$environment"
+    --template-file main-ip.json --parameters environment="$environment" \
     --query properties.outputs.ipAddress.value -o tsv)
 
 echo "IP Address:  $ip"

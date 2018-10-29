@@ -13,6 +13,8 @@ echo "Environment:  $environment"
 filter="[?name=='cluster-dev']".name
 clusterCount=$(az aks list -o tsv --query $filter | wc -l)
 
+echo "Cluster Count:  $clusterCount"
+
 #   If there is no cluster, deploy it without hooking the routing table
 if [$clusterCount -ne 1]
 then

@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "clusterExist": {
+            "metadata": {
+                "description": "Does the cluster already exist"
+            },
+            "type": "bool"
+        },
         "vault-id": {
             "metadata": {
                 "description": "Resource ID of the Azure Vault"
@@ -30,6 +36,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "Cluster Exist": {
+                        "value": "parameters('clusterExist')]"
+                    },
                     "ssh Public Key": {
                         "reference": {
                             "keyVault": {

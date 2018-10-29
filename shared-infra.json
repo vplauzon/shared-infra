@@ -2,11 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "clusterExist": {
+        "routeTableId": {
             "metadata": {
-                "description": "Does the cluster already exist"
+                "description": "Route Table ID, if it exists"
             },
-            "type": "bool"
+            "type": "string"
         },
         "vault-id": {
             "metadata": {
@@ -36,8 +36,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "Cluster Exist": {
-                        "value": "parameters('clusterExist')]"
+                    "Route Table Id": {
+                        "value": "[parameters('routeTableId')]"
                     },
                     "ssh Public Key": {
                         "reference": {

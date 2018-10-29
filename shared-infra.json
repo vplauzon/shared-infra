@@ -24,11 +24,11 @@
     "variables": {
         "Template URL Prefix": "https://github.com/vplauzon/shared-infra/raw/master/",
         "AKS Cluster Template URL": "[concat(variables('Template URL Prefix'), 'cluster.json')]",
-        "Cluster Name": "[concat('cluster-', parameters('environment'))]"
+        "Cluster Deployment Name":"[concat('Cluster-', guid(deployment().name))]"
     },
     "resources": [
         {
-            "name": "Cluster",
+            "name": "[variables('Cluster Deployment Name')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "properties": {
@@ -50,7 +50,7 @@
                         }
                     },
                     "Cluster Name": {
-                        "value": "[variables('Cluster Name')]"
+                        "value": "[concat('cluster-', parameters('environment'))]"
                     },
                     "DNS Prefix": {
                         "reference": {
@@ -90,8 +90,8 @@
     ],
     "outputs": {
         "nodeResourceGroup": {
-            "type": "string",
-            "value": "[reference('Cluster').nodeResourceGroup]"
+            "type": "object",
+            "value": "[reference(variables('Cluster Deployment Name')).outputs]"
         }
     }
 }

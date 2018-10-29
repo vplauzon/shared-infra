@@ -191,7 +191,7 @@
     "outputs": {
         "nodeResourceGroup": {
             "type": "string",
-            "value": "[reference(parameters('Cluster Name')).nodeResourceGroup]"
+            "value": "[reference(parameters('Cluster Name')).outputs.nodeResourceGroup]"
         }
     }
 }

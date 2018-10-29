@@ -10,10 +10,11 @@
         }
     },
     "variables": {
+        "IP Name": "[concat('main-ip-', parameters('environment'))]"
     },
     "resources": [
         {
-            "name": "[concat('main-ip-', parameters('environment'))]",
+            "name": "[variables('IP Name')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-08-01",
             "location": "[resourceGroup().location]",
@@ -32,5 +33,10 @@
             "zones": []
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "ipAddress": {
+            "type": "object",
+            "value": "[reference(variables('IP Name'))]"
+        }
+    }
 }

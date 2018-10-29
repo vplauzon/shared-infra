@@ -218,9 +218,9 @@
         }
     ],
     "outputs": {
-        "controlPlaneFQDN": {
+        "nodeResourceGroup": {
             "type": "string",
-            "value": "[reference(parameters('Cluster Name')).fqdn]"
+            "value": "[reference(parameters('Cluster Name')).nodeResourceGroup]"
         }
     }
 }

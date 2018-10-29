@@ -88,5 +88,10 @@
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "nodeResourceGroup": {
+            "type": "string",
+            "value": "[reference('Cluster').nodeResourceGroup]"
+        }
+    }
 }

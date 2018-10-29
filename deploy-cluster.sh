@@ -16,6 +16,8 @@ clusterCount=$(az aks list -o tsv --query $filter | wc -l)
 #   If there is no cluster, deploy it without hooking the routing table
 if [$clusterCount -neq 1]
 then
+    echo "No cluster:  first deploy"
+
     az group deployment create -g shared-infra-dev --name deploy-$(date +"%d-%m-%y--%H-%M-%S") --template-file shared-infra.json \
      --parameters routeTableId= vault-id=$vaultId environment=$environment
 fi
@@ -29,3 +31,8 @@ echo "Node Resource Group:" $nrg
 rt=$(az network route-table list -g $nrg -o tsv --query [0].id)
 
 echo "Routing Table:" $rt
+
+echo "Deploy with routing table"
+
+az group deployment create -g shared-infra-dev --name deploy-$(date +"%d-%m-%y--%H-%M-%S") --template-file shared-infra.json \
+    --parameters routeTableId=$rt vault-id=$vaultId environment=$environment

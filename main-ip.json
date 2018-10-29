@@ -13,7 +13,7 @@
     },
     "resources": [
         {
-            "name": "[concat('Main-IP-', parameters('environment'))]",
+            "name": "[concat('main-ip-', parameters('environment'))]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-08-01",
             "location": "[resourceGroup().location]",

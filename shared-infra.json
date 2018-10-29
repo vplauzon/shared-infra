@@ -22,7 +22,10 @@
         }
     },
     "variables": {
-        "AKS Cluster Template URL": "https://github.com/vplauzon/shared-infra/raw/master/cluster.json"
+        "Template URL Prefix": "https://github.com/vplauzon/shared-infra/raw/master/",
+        "AKS Cluster Template URL": "[concat(variables('Template URL Prefix'), 'cluster.json')]",
+        "Main IP Template URL": "[concat(variables('Template URL Prefix'), 'main-ip.json')]",
+        "Cluster Name": "[concat('cluster-', parameters('environment'))]"
     },
     "resources": [
         {
@@ -39,9 +42,6 @@
                     "Route Table Id": {
                         "value": "[parameters('routeTableId')]"
                     },
-                    "Main IP Name": {
-                        "value": "[concat('main-ip-', parameters('environment'))]"
-                    },
                     "ssh Public Key": {
                         "reference": {
                             "keyVault": {
@@ -51,7 +51,7 @@
                         }
                     },
                     "Cluster Name": {
-                        "value": "[concat('cluster-', parameters('environment'))]"
+                        "value": "[variables('Cluster Name')]"
                     },
                     "DNS Prefix": {
                         "reference": {
@@ -84,6 +84,24 @@
                             },
                             "secretName": "[concat(parameters('environment'),'-shared-infra-password')]"
                         }
+                    }
+                }
+            }
+        },
+        {
+            "name": "Main-IP",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "resourceGroup": "[reference(variables('Cluster Name')).nodeResourceGroup]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('Main IP Template URL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "environment": {
+                        "value": "[parameters('environment')]"
                     }
                 }
             }

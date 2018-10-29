@@ -6,7 +6,7 @@
             "metadata": {
                 "description": "Route Table ID, if it exists"
             },
-            "type": "bool"
+            "type": "string"
         },
         "ssh Public Key": {
             "metadata": {

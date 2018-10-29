@@ -20,7 +20,7 @@ if [ $clusterCount -ne 1 ]
 then
     echo "No cluster:  first deploy"
 
-    az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y--%H:%M:%S") --template-file shared-infra.json \
+    az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y--%H%M%S") --template-file shared-infra.json \
      --parameters routeTableId= vault-id="$vaultId" environment="$environment"
 fi
 
@@ -36,5 +36,5 @@ echo "Routing Table:" $rt
 
 echo "Deploy with routing table"
 
-az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y--%H:%M:%S") --template-file shared-infra.json \
+az group deployment create -g shared-infra-dev --name deploy-$(date +"%d%m%y--%H%M%S") --template-file shared-infra.json \
     --parameters routeTableId="$rt" vault-id="$vaultId" environment="$environment"

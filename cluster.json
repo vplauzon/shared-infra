@@ -117,7 +117,7 @@
             "apiVersion": "2017-10-01",
             "name": "[variables('VNet Name')]",
             "location": "[resourceGroup().location]",
-            "condition": "[not(variables('Does Route Table Exist'))]",
+            "condition": "[variables('Does Route Table Exist')]",
             "dependsOn": [],
             "properties": {
                 "addressSpace": {

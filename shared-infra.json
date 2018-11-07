@@ -86,6 +86,19 @@
                     }
                 }
             }
+        },
+        {
+            "name": "central-insight",
+            "type": "microsoft.insights/components",
+            "apiVersion": "2015-05-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "kind": "web",
+            "tags": {},
+            "properties": {
+                "Application_Type": "web"
+            },
+            "dependsOn": []
         }
     ],
     "outputs": {

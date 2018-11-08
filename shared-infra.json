@@ -88,7 +88,7 @@
             }
         },
         {
-            "name": "central-insight",
+            "name": "[concat('central-insight-', parameters('environment'))]",
             "type": "microsoft.insights/components",
             "apiVersion": "2015-05-01",
             "location": "[resourceGroup().location]",

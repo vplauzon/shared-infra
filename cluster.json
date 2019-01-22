@@ -65,6 +65,7 @@
         }
     },
     "variables": {
+        "kubernetes version": "1.12.4",
         "isKubenet": "[equals(parameters('Network Plugin'), 'kubenet')]",
         "Max Pods": 200,
         "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
@@ -77,7 +78,6 @@
         "Cluster-IPs Service Cidr": "10.0.0.0/16",
         "Dns Service IP": "10.0.0.10",
         "Docker Bridge Cidr": "10.2.0.1/16",
-        "kubernetes version": "1.11.4",
         "VM Size": "Standard_B2ms",
         "Does Route Table Exist": "[greater(length(parameters('Route Table Id')),0)]",
         "AKS subnet alternatives": {

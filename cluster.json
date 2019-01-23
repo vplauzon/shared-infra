@@ -65,7 +65,7 @@
         }
     },
     "variables": {
-        "kubernetes version": "1.12.4",
+        "kubernetes version": "1.11.5",
         "isKubenet": "[equals(parameters('Network Plugin'), 'kubenet')]",
         "Max Pods": 200,
         "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",

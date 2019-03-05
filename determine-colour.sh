@@ -9,11 +9,11 @@ then
     blue=$($dns grep blue)
     green=$($dns grep green)
 
-    if [$blue -n]
+    if [-n $blue]
     then
         colour='blue'
     else
-        if [$green -n]
+        if [-n $green]
         then
             colour='green'
         else

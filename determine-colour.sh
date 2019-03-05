@@ -1,12 +1,15 @@
 environment=$1
 
-if[$(request-colour)='default']
+if $(request-colour)='default'
 then
     dns=$(az network dns record-set cname show -g vpl-dns -z vplauzon.com -n main-ip.dev --query "cnameRecord.cname" -o tsv)
+
+    echo "DNS:  $dns"
+
     blue=$($dns grep blue)
     green=$($dns grep green)
 
-    if[$blue -n]
+    if $blue -n
     then
         colour='blue'
     else

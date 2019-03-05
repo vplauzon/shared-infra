@@ -4,7 +4,9 @@ requestColour=$2
 echo "Environment:  $environment"
 echo "Request Colour:  $requestColour"
 
-if [$requestColour=="default"]
+default="default"
+
+if [$requestColour==$default]
 then
     dns=$(az network dns record-set cname show -g vpl-dns -z vplauzon.com -n main-ip.dev --query "cnameRecord.cname" -o tsv)
 

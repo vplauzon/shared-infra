@@ -36,6 +36,7 @@
             "metadata": {
                 "description": "routeTableId, if it exists ; empty if it doesn't"
             },
+            "defaultValue": "",
             "type": "string"
         },
         "clusterName": {
@@ -184,7 +185,7 @@
     "outputs": {
         "nodeResourceGroup": {
             "type": "string",
-            "value": "[reference(variables('Cluster Name')).nodeResourceGroup]"
+            "value": "[reference(parameters('clusterName')).nodeResourceGroup]"
         }
     }
 }

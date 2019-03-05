@@ -2,109 +2,185 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "routeTableId": {
+        "servicePrincipalAppId": {
             "metadata": {
-                "description": "Route Table ID, if it exists"
+                "description": "App ID of the Service Principal"
             },
             "type": "string"
         },
-        "vault-id": {
+        "servicePrincipalObjectId": {
             "metadata": {
-                "description": "Resource ID of the Azure Vault"
+                "description": "Object ID of the Service Principal"
+            },
+            "type": "string"
+        },
+        "servicePrincipalSecret": {
+            "metadata": {
+                "description": "Secret of the Service Principal"
+            },
+            "type": "securestring"
+        },
+        "sshPublicKey": {
+            "metadata": {
+                "description": "sshPublicKey"
+            },
+            "type": "securestring"
+        },
+        "dnsPrefix": {
+            "metadata": {
+                "description": "DNS Prefix for the cluster"
+            },
+            "type": "string"
+        },
+        "routeTableId": {
+            "metadata": {
+                "description": "routeTableId, if it exists ; empty if it doesn't"
             },
             "type": "string"
         },
         "environment": {
             "metadata": {
-                "description": "Deployment environment ; used in the vault's secret names"
+                "description": "dnsPrefix for the cluster"
             },
+            "defaultValue": "cluster-default",
             "type": "string"
+        },
+        "instanceCount": {
+            "metadata": {
+                "description": "# of worker nodes"
+            },
+            "defaultValue": 2,
+            "type": "int"
         }
     },
     "variables": {
-        "Template URL Prefix": "https://github.com/vplauzon/shared-infra/raw/master/",
-        "AKS Cluster Template URL": "[concat(variables('Template URL Prefix'), 'cluster.json')]",
-        "Cluster Deployment Name":"[concat('Cluster-', guid(deployment().name))]"
+        "Cluster Name": "[concat('vpl-cluster-', parameters('environment'))]",
+        "Kubernetes Version": "1.11.5",
+        "Max Pods": 100,
+        "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+        "VNET Name": "[concat('cluster-vnet-', parameters('environment'))]",
+        "VNET Address Space": "172.16.0.0/18",
+        "Role Assignment Name": "[concat(variables('VNET Name'), '/Microsoft.Authorization/', guid(concat(resourceGroup().id), variables('Network Contributor Role')))]",
+        "AKS Subnet Address Space": "172.16.0.0/20",
+        "Service Subnet Address Space": "172.16.16.0/20",
+        "Pod Cidr": "10.16.0.1/16",
+        "Cluster-IPs Service Cidr": "10.0.0.0/16",
+        "Dns Service IP": "10.0.0.10",
+        "Docker Bridge Cidr": "10.2.0.1/16",
+        "VM Size": "Standard_B2ms",
+        "Does Route Table Exist": "[greater(length(parameters('routeTableId')),0)]",
+        "AKS subnet alternatives": {
+            "true": {
+                "addressPrefix": "[variables('AKS Subnet Address Space')]",
+                "routeTable": {
+                    "id": "[parameters('routeTableId')]"
+                }
+            },
+            "false": {
+                "addressPrefix": "[variables('AKS Subnet Address Space')]"
+            }
+        },
+        "Services subnet alternatives": {
+            "true": {
+                "addressPrefix": "[variables('Service Subnet Address Space')]",
+                "routeTable": {
+                    "id": "[parameters('routeTableId')]"
+                }
+            },
+            "false": {
+                "addressPrefix": "[variables('Service Subnet Address Space')]"
+            }
+        }
     },
     "resources": [
         {
-            "name": "[variables('Cluster Deployment Name')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-05-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('VNet Name')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
             "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('AKS Cluster Template URL')]",
-                    "contentVersion": "1.0.0.0"
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('VNET Address Space')]"
+                    ]
                 },
-                "parameters": {
-                    "Route Table Id": {
-                        "value": "[parameters('routeTableId')]"
+                "subnets": [
+                    {
+                        "name": "aks",
+                        "properties": "[variables('AKS subnet alternatives')[string(variables('Does Route Table Exist'))]]"
                     },
-                    "ssh Public Key": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[parameters('vault-id')]"
-                            },
-                            "secretName": "[concat(parameters('environment'),'-shared-infra-ssh-public-key')]"
-                        }
-                    },
-                    "Cluster Name": {
-                        "value": "[concat('cluster-', parameters('environment'))]"
-                    },
-                    "DNS Prefix": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[parameters('vault-id')]"
-                            },
-                            "secretName": "[concat(parameters('environment'),'-shared-infra-dns-prefix')]"
-                        }
-                    },
-                    "Service Principal App ID": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[parameters('vault-id')]"
-                            },
-                            "secretName": "[concat(parameters('environment'),'-shared-infra-app-id')]"
-                        }
-                    },
-                    "Service Principal Object ID": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[parameters('vault-id')]"
-                            },
-                            "secretName": "[concat(parameters('environment'),'-shared-infra-object-id')]"
-                        }
-                    },
-                    "Service Principal Secret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[parameters('vault-id')]"
-                            },
-                            "secretName": "[concat(parameters('environment'),'-shared-infra-password')]"
-                        }
+                    {
+                        "name": "services",
+                        "properties": "[variables('Services subnet alternatives')[string(variables('Does Route Table Exist'))]]"
                     }
-                }
+                ]
+            },
+            "resources": []
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/providers/roleAssignments",
+            "apiVersion": "2017-05-01",
+            "name": "[variables('Role Assignment Name')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('Network Contributor Role')]",
+                "principalId": "[parameters('servicePrincipalObjectId')]"
             }
         },
         {
-            "name": "[concat('central-insight-', parameters('environment'))]",
-            "type": "microsoft.insights/components",
-            "apiVersion": "2015-05-01",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "name": "[variables('Cluster Name')]",
+            "apiVersion": "2018-03-31",
             "location": "[resourceGroup().location]",
-            "tags": {},
-            "kind": "web",
-            "tags": {},
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('VNET Name'))]"
+            ],
             "properties": {
-                "Application_Type": "web"
-            },
-            "dependsOn": []
+                "kubernetesVersion": "[variables('Kubernetes Version')]",
+                "dnsPrefix": "[parameters('dnsPrefix')]",
+                "addonProfiles": {},
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('servicePrincipalAppId')]",
+                    "secret": "[parameters('servicePrincipalSecret')]"
+                },
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "count": "[parameters('instanceCount')]",
+                        "vmSize": "[variables('VM Size')]",
+                        "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('VNET Name'), 'aks')]",
+                        "maxPods": "[variables('Max Pods')]",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "hidden-admin",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('sshPublicKey')]"
+                            }
+                        ]
+                    }
+                },
+                "networkProfile": {
+                    "networkPlugin": "kubenet",
+                    "podCidr": "[variables('Pod Cidr')]",
+                    "serviceCidr": "[variables('Cluster-IPs Service Cidr')]",
+                    "dnsServiceIP": "[variables('Dns Service IP')]",
+                    "dockerBridgeCidr": "[variables('Docker Bridge Cidr')]"
+                }
+            }
         }
     ],
     "outputs": {
         "nodeResourceGroup": {
             "type": "string",
-            "value": "[reference(variables('Cluster Deployment Name')).outputs.nodeResourceGroup.value]"
+            "value": "[reference(variables('Cluster Name')).nodeResourceGroup]"
         }
     }
 }

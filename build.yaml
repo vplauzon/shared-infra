@@ -1,0 +1,15 @@
+resources:
+- repo: self
+queue:
+  name: Hosted Ubuntu 1604
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
+  inputs:
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/content'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: content'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
+    ArtifactName: content

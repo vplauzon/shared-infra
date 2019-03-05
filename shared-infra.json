@@ -38,11 +38,16 @@
             },
             "type": "string"
         },
+        "clusterName": {
+            "metadata": {
+                "description": "Name of the AKS cluster"
+            },
+            "type": "string"
+        },
         "environment": {
             "metadata": {
                 "description": "dnsPrefix for the cluster"
             },
-            "defaultValue": "cluster-default",
             "type": "string"
         },
         "instanceCount": {
@@ -54,7 +59,6 @@
         }
     },
     "variables": {
-        "Cluster Name": "[concat('vpl-cluster-', parameters('environment'))]",
         "Kubernetes Version": "1.11.5",
         "Max Pods": 100,
         "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
@@ -132,7 +136,7 @@
         },
         {
             "type": "Microsoft.ContainerService/managedClusters",
-            "name": "[variables('Cluster Name')]",
+            "name": "[parameters('clusterName')]",
             "apiVersion": "2018-03-31",
             "location": "[resourceGroup().location]",
             "dependsOn": [

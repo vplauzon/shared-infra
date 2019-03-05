@@ -8,7 +8,7 @@ echo "Environment:  $environment"
 echo "Request Colour:  $requestColour"
 
 #   Default:  find "active colour"
-if [[ $requestColour=='default' ]]
+if [[ $requestColour == 'default' ]]
 then
     echo "Fetch DNS recort set..."
 

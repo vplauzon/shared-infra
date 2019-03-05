@@ -1,9 +1,6 @@
 #   Bind script parameters
 environment=$1
 location=$2
-rg=$3
-clusterName=$4
-vaultId=$5
 
 echo "Resource Group:  $rg"
 echo "Cluster Name:  $clusterName"

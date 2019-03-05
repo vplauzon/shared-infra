@@ -1,11 +1,13 @@
 #!/bin/sh
 
+#   Bind script parameters
 environment=$1
 requestColour=$2
 
 echo "Environment:  $environment"
 echo "Request Colour:  $requestColour"
 
+#   Default:  find "active colour"
 if [[ $requestColour=='default' ]]
 then
     echo "Fetch DNS recort set..."
@@ -27,9 +29,10 @@ then
         fi
     fi
 else
-    echo "Default colour"
+    #   Specified colour:  force that colour
+    echo "Specified colour"
     colour=$requestColour
 fi
 
 echo "Colour:  $colour"
-##vso[task.setvariable variable=colour;]$colour
+echo "##vso[task.setvariable variable=colour;]$colour"

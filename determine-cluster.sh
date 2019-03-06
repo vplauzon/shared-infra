@@ -11,5 +11,5 @@ cluster="shared-cluster-$environment-$colour"
 echo "Resource Group:  $rg"
 echo "Cluster Name:  $cluster"
 
-echo "##vso[task.setvariable variable=rg;$rg]"
-echo "##vso[task.setvariable variable=cluster;$cluster]"
+echo "##vso[task.setvariable variable=rg;]$rg"
+echo "##vso[task.setvariable variable=cluster;]$cluster"

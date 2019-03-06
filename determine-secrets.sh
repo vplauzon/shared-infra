@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#   This file exist so that we do not have to parameterize parameters name in the ARM template
+#   i.e. dev-aks-dns-prefix or prod-aks-dns-prefix become aks-dns-prefix
+
 #   Bind script parameters
 echo "##vso[task.setvariable variable=aks-ssh-public-key;]$1"
 echo "##vso[task.setvariable variable=aks-dns-prefix;]$2"

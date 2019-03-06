@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #   Bind script parameters
 environment=$1

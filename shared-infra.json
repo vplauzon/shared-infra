@@ -162,6 +162,16 @@
                         "storageProfile": "ManagedDisks"
                     }
                 ],
+                "linuxProfile": {
+                    "adminUsername": "hidden-admin",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('sshPublicKey')]"
+                            }
+                        ]
+                    }
+                },
                 "networkProfile": {
                     "networkPlugin": "kubenet",
                     "podCidr": "[variables('Pod Cidr')]",

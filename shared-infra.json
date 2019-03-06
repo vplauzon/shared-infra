@@ -51,12 +51,6 @@
             },
             "type": "string"
         },
-        "colour": {
-            "metadata": {
-                "description": "Colour of the environment (green or blue)"
-            },
-            "type": "string"
-        },
         "instanceCount": {
             "metadata": {
                 "description": "# of worker nodes"
@@ -101,8 +95,7 @@
             "false": {
                 "addressPrefix": "[variables('Service Subnet Address Space')]"
             }
-        },
-        "IP Name": "[concat('main-ip-', parameters('environment'))]"
+        }
     },
     "resources": [
         {
@@ -187,26 +180,6 @@
                     "dockerBridgeCidr": "[variables('Docker Bridge Cidr')]"
                 }
             }
-        },
-        {
-            "name": "[variables('IP Name')]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2018-08-01",
-            "resourceGroup": "[reference(parameters('clusterName')).nodeResourceGroup]",
-            "location": "[resourceGroup().location]",
-            "tags": {},
-            "sku": {
-                "name": "Basic"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static",
-                "publicIPAddressVersion": "IPv4",
-                "dnsSettings": {
-                    "domainNameLabel": "[concat('vpl-cluster-main-ip-', parameters('colour'), '-', parameters('environment'))]"
-                },
-                "ipTags": []
-            },
-            "zones": []
         }
     ],
     "outputs": {

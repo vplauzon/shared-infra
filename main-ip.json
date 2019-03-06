@@ -7,6 +7,12 @@
                 "description": "Deployment environment ; used in the vault's secret names"
             },
             "type": "string"
+        },
+        "colour": {
+            "metadata": {
+                "description": "Colour of the environment (green or blue)"
+            },
+            "type": "string"
         }
     },
     "variables": {
@@ -26,7 +32,7 @@
                 "publicIPAllocationMethod": "Static",
                 "publicIPAddressVersion": "IPv4",
                 "dnsSettings": {
-                    "domainNameLabel": "[concat('vpl-cluster-main-ip-', parameters('environment'))]"
+                    "domainNameLabel": "[concat('vpl-cluster-main-ip-', parameters('colour'), '-', parameters('environment'))]"
                 },
                 "ipTags": []
             },

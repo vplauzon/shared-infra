@@ -16,7 +16,7 @@
         }
     },
     "variables": {
-        "IP Name": "[concat('main-ip-', parameters('environment'))]"
+        "IP Name": "[concat('main-ip-', parameters('colour'), '-', parameters('environment'))]"
     },
     "resources": [
         {

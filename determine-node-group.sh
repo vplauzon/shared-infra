@@ -15,6 +15,10 @@ rgCount=$(az group list -o tsv --query $filter | wc -l)
 
 echo "Resource Group Count:  $rgCount"
 
+#   Default empty output variable
+echo "##vso[task.setvariable variable=nrg;]"
+echo "##vso[task.setvariable variable=routeTableId;]"
+
 if [[ $rgCount == 1 ]]
 then
     #   Test if there is a cluster

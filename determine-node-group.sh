@@ -42,6 +42,7 @@ then
         echo "Routing Table:" $rt
 
         #   Pass it as an output variable
+        echo "##vso[task.setvariable variable=nrg;]$nrg"
         echo "##vso[task.setvariable variable=routeTableId;]$rt"
     fi
 fi

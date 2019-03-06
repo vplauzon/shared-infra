@@ -3,7 +3,13 @@ environment=$1
 colour=$2
 
 echo "Environment:  $environment"
-echo "Colour:  $location"
+echo "Colour:  $colour"
 
-echo "##vso[task.setvariable variable=rg;]shared-stateless-$environment-$colour"
-echo "##vso[task.setvariable variable=cluster;]shared-cluster-$environment-$colour"
+rg="shared-stateless-$environment-$colour"
+cluster="shared-cluster-$environment-$colour"
+
+echo "Resource Group:  $rg"
+echo "Cluster Name:  $cluster"
+
+echo "##vso[task.setvariable variable=rg;$rg]"
+echo "##vso[task.setvariable variable=cluster;$cluster]"

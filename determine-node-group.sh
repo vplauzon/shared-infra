@@ -1,5 +1,12 @@
 #!/bin/bash
 
+###################################################################################################
+### Determine the name of the node group
+###
+### Outputs:
+###     nrg:  Node resource group
+###     routeTableId:  Route Table Id
+
 #   Bind script parameters
 rg=$1
 cluster=$2

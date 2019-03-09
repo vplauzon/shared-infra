@@ -1,5 +1,15 @@
 #!/bin/bash
 
+###################################################################################################
+### Determine the colour to deploy
+###
+### Outputs:
+###     colour:  colour of the environment (blue or green)
+###     env:  name of the environment (e.g. dev, prod)
+###     sirg:  shared-infra resource group (in proper coloured environment)
+###     ssrg:  shared-state resourge group
+###     cluster:  name of the AKS cluster (in sirg)
+
 #   Bind script parameters
 environment=$1
 requestColour=$2
@@ -34,5 +44,18 @@ else
     colour=$requestColour
 fi
 
+sirg="shared-stateless-$environment-$colour"
+ssrg="shared-state-$environment"
+cluster="shared-cluster-$environment-$colour"
+
 echo "Colour:  $colour"
+echo "Environment:  $environment"
+echo "sirg:  $sirg"
+echo "ssrg:  $ssrg"
+echo "Cluster:  $cluster"
+
 echo "##vso[task.setvariable variable=colour;]$colour"
+echo "##vso[task.setvariable variable=env;]$environment"
+echo "##vso[task.setvariable variable=sirg;]$sirg"
+echo "##vso[task.setvariable variable=ssrg;]$ssrg"
+echo "##vso[task.setvariable variable=cluster;]$cluster"

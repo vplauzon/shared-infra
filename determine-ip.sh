@@ -1,5 +1,11 @@
 #!/bin/bash
 
+###################################################################################################
+### Determine the ip address of the main public IP of the AKS cluster
+###
+### Outputs:
+###     ip:  IP address
+
 #   Bind script parameters
 nrg=$1
 colour=$2

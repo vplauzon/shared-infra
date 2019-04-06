@@ -2,14 +2,23 @@ vault=<vault name>
 
 # Dev
 
-az keyvault secret set --vault-name $vault --name dev-ip-blue --value <VALUE>
-az keyvault secret set --vault-name $vault --name dev-ip-green --value <VALUE>
+az keyvault secret set --vault-name $vault --name dev-ip --value <VALUE>
 
 az keyvault secret set --vault-name $vault --name dev-aks-ssh-public-key --value <VALUE>
 az keyvault secret set --vault-name $vault --name dev-aks-dns-prefix --value <VALUE>
 az keyvault secret set --vault-name $vault --name dev-aks-app-id --value <VALUE>
 az keyvault secret set --vault-name $vault --name dev-aks-object-id --value <VALUE>
 az keyvault secret set --vault-name $vault --name dev-aks-password --value <VALUE>
+
+# Staging
+
+az keyvault secret set --vault-name $vault --name staging-ip --value <VALUE>
+
+az keyvault secret set --vault-name $vault --name staging-aks-ssh-public-key --value <VALUE>
+az keyvault secret set --vault-name $vault --name staging-aks-dns-prefix --value <VALUE>
+az keyvault secret set --vault-name $vault --name staging-aks-app-id --value <VALUE>
+az keyvault secret set --vault-name $vault --name staging-aks-object-id --value <VALUE>
+az keyvault secret set --vault-name $vault --name staging-aks-password --value <VALUE>
 
 # Prod
 

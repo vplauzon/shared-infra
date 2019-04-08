@@ -2,25 +2,17 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": {
+        "mainIp": {
             "metadata": {
-                "description": "Deployment environment ; used in the vault's secret names"
-            },
-            "type": "string"
-        },
-        "colour": {
-            "metadata": {
-                "description": "Colour of the environment (green or blue)"
+                "description": "Name of the Main IP"
             },
             "type": "string"
         }
     },
-    "variables": {
-        "IP Name": "[concat('main-ip-', parameters('colour'), '-', parameters('environment'))]"
-    },
+    "variables": {},
     "resources": [
         {
-            "name": "[variables('IP Name')]",
+            "name": "[parameters('mainIp')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-08-01",
             "location": "[resourceGroup().location]",
@@ -32,7 +24,7 @@
                 "publicIPAllocationMethod": "Static",
                 "publicIPAddressVersion": "IPv4",
                 "dnsSettings": {
-                    "domainNameLabel": "[concat('vpl-cluster-main-ip-', parameters('colour'), '-', parameters('environment'))]"
+                    "domainNameLabel": "[parameters('mainIp')]"
                 },
                 "ipTags": []
             },
@@ -42,7 +34,7 @@
     "outputs": {
         "ipAddress": {
             "type": "string",
-            "value": "[reference(variables('IP Name')).ipAddress]"
+            "value": "[reference(parameters('mainIp')).ipAddress]"
         }
     }
 }

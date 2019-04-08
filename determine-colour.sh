@@ -55,13 +55,13 @@ fi
 
 
 echo "Colour:  $colour"
-echo "Environment:  $environment"
+echo "Environment:  $env"
 echo "sirg:  $sirg"
 echo "ssrg:  $ssrg"
 echo "Cluster:  $cluster"
 
 echo "##vso[task.setvariable variable=colour;]$colour"
-echo "##vso[task.setvariable variable=env;]$environment"
+echo "##vso[task.setvariable variable=env;]$env"
 echo "##vso[task.setvariable variable=sirg;]$sirg"
 echo "##vso[task.setvariable variable=ssrg;]$ssrg"
 echo "##vso[task.setvariable variable=cluster;]$cluster"

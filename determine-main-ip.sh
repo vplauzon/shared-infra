@@ -8,7 +8,7 @@
 ###     colour:  colour of the environment (blue, green or none)
 ###
 ### Outputs:
-###     main-ip:  name of the main-ip resource
+###     mainIp:  name of the main-ip resource
 
 #   Bind script parameters
 env=$1

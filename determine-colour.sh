@@ -4,7 +4,8 @@
 ### Determine the colour to deploy
 ###
 ### Inputs:
-###     stageName:  name of the stage (e.g. dev, staging, prod, alternate)
+###     stageName:  name of the stage (e.g. dev, staging, prod)
+###     colourRequest:  request for colour ; either default or alternate ; ignored for non-prod
 ###
 ### Outputs:
 ###     env:  name of the environment (e.g. dev, staging, prod)
@@ -15,14 +16,15 @@
 
 #   Bind script parameters
 stageName=$1
+colourRequest=$2
 
 echo "Stage Name:  $stageName"
+echo "Colour Request:  $colourRequest"
 
 #   Are we in prod or not?
-if [[ $stageName == 'prod' || $stageName == 'alternate' ]]
+env="$stageName"
+if [[ $env == 'prod' ]]
 then
-    env="prod"
-
     echo "Fetch DNS recort set..."
 
     dns=$(az network dns record-set cname show -g vpl-dns -z vplauzon.com -n main-ip --query "cnameRecord.cname" -o tsv)
@@ -46,7 +48,6 @@ then
     ssrg="shared-state-$env"
     cluster="shared-cluster-$env-$colour"
 else
-    env="$stageName"
     colour="none"
     sirg="shared-stateless-$env"
     ssrg="shared-state-$env"

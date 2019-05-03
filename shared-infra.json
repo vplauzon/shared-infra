@@ -68,10 +68,10 @@
         "Role Assignment Name": "[concat(variables('VNET Name'), '/Microsoft.Authorization/', guid(concat(resourceGroup().id), variables('Network Contributor Role')))]",
         "AKS Subnet Address Space": "172.16.0.0/20",
         "Service Subnet Address Space": "172.16.16.0/20",
-        "Pod Cidr": "10.16.0.1/16",
+        "Pod Cidr": "10.16.0.0/16",
         "Cluster-IPs Service Cidr": "10.0.0.0/16",
         "Dns Service IP": "10.0.0.10",
-        "Docker Bridge Cidr": "10.2.0.1/16",
+        "Docker Bridge Cidr": "10.2.0.0/16",
         "VM Size": "Standard_B2ms",
         "Does Route Table Exist": "[greater(length(parameters('routeTableId')),0)]",
         "AKS subnet alternatives": {

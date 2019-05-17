@@ -39,6 +39,13 @@
             "defaultValue": "",
             "type": "string"
         },
+        "logAnalyticsId": {
+            "metadata": {
+                "description": "Log Analytics ID"
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
         "clusterName": {
             "metadata": {
                 "description": "Name of the AKS cluster"
@@ -146,7 +153,14 @@
             "properties": {
                 "kubernetesVersion": "[variables('Kubernetes Version')]",
                 "dnsPrefix": "[parameters('dnsPrefix')]",
-                "addonProfiles": {},
+                "addonProfiles": {
+                    "omsagent": {
+                        "enabled": true,
+                        "config": {
+                            "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsId')]"
+                        }
+                    }
+                },
                 "servicePrincipalProfile": {
                     "clientId": "[parameters('servicePrincipalAppId')]",
                     "secret": "[parameters('servicePrincipalSecret')]"

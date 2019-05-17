@@ -3,6 +3,10 @@
 ###################################################################################################
 ### Determine the name of the node group
 ###
+### Inputs:
+###     rg:  Resource group of the cluster
+###     cluster:  Name of the cluster
+###
 ### Outputs:
 ###     nrg:  Node resource group
 ###     routeTableId:  Route Table Id

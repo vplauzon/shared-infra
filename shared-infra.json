@@ -67,7 +67,7 @@
         }
     },
     "variables": {
-        "Kubernetes Version": "1.13.5",
+        "Kubernetes Version": "1.13.10",
         "Max Pods": 100,
         "Network Contributor Role": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
         "VNET Name": "[concat('cluster-vnet-', parameters('environment'))]",

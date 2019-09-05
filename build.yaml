@@ -3,6 +3,13 @@ resources:
 queue:
   name: Hosted Ubuntu 1604
 steps:
+# Get Helm
+- bash: 
+  workingDirectory: #
+  displayName: #
+  failOnStderr: #
+  env:  # mapping of environment variables to add
+
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
   inputs:

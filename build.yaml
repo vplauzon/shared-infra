@@ -4,17 +4,15 @@ queue:
   name: Hosted Ubuntu 1604
 steps:
 # Get Helm
-- bash: 
-  workingDirectory: #
-  displayName: #
-  failOnStderr: #
-  env:  # mapping of environment variables to add
+- bash: get-helm.sh
 
+# Copy source to "content" folder
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
   inputs:
     TargetFolder: '$(Build.ArtifactStagingDirectory)/content'
 
+# Publish "content" artefact
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: content'
   inputs:

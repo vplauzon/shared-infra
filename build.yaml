@@ -4,9 +4,11 @@ queue:
   name: Hosted Ubuntu 1604
 steps:
 # Get Helm
-- bash: get-helm.sh
-  targetType: filePath
-  displayName:  Get Helm binaries
+- task: Bash@3
+  displayName:  "Get Helm binaries"
+  inputs:
+    targetType: filePath
+    filePath: get-helm.sh
 
 # Copy source to "content" folder
 - task: CopyFiles@2

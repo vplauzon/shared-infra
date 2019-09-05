@@ -5,6 +5,8 @@ queue:
 steps:
 # Get Helm
 - bash: get-helm.sh
+  targetType: filePath
+  displayName:  Get Helm binaries
 
 # Copy source to "content" folder
 - task: CopyFiles@2

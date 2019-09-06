@@ -15,5 +15,7 @@ echo
 echo "Helm command"
 
 ./helm upgrade --install \
-  --set rbac.create=false,controller.replicaCount=2,controller.service.loadBalancerIP=$ip \
+  --set rbac.create=false \
+  --set controller.replicaCount=2 \
+  --set controller.service.loadBalancerIP=$ip \
   --wait main-ingress stable/nginx-ingress

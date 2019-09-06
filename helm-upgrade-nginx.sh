@@ -22,6 +22,9 @@ echo "Attach to AKS cluster"
 
 az aks get-credentials -g $rg -n $cluster
 
+echo "Give helm execution priviledge"
+chmod +x ./helm
+
 echo "Helm command"
 
 ./helm upgrade --install \

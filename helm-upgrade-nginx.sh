@@ -25,6 +25,9 @@ az aks get-credentials -g $rg -n $cluster
 echo "Give helm execution priviledge"
 chmod +x ./helm
 
+echo "Install stable repo"
+./helm repo add stable https://kubernetes-charts.storage.googleapis.com
+
 echo "Helm command"
 
 ./helm upgrade --install \

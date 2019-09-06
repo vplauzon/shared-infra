@@ -17,6 +17,9 @@ echo "Extract helm"
 
 tar --extract --file helm-v3.0.0-beta.3-linux-amd64.tar.gz
 
+echo "Give helm execution priviledge"
+chmod +x linux-amd64/helm
+
 echo "Move helm"
 mv linux-amd64/helm ..
 

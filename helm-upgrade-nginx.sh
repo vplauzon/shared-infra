@@ -9,7 +9,7 @@
 #   Bind script parameters
 ip=$1
 
-echo "IP:  #ip"
+echo "IP:  $ip"
 echo
 
 echo "Helm command"

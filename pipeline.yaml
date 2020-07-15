@@ -1,0 +1,34 @@
+# Help:  https://aka.ms/yaml
+
+resources:
+- repo: self
+
+variables:  []
+
+trigger:
+- master
+
+stages:
+  - stage:  build
+    dependsOn:  []
+    variables:  []
+    jobs:
+    - job:  main
+      dependsOn:  []
+      variables:  []
+      continueOnError:  false
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+      # Copy source to "content" folder
+      - task: CopyFiles@2
+        displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/content'
+        inputs:
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/content'
+
+      # Publish "content" artefact
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: content'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
+          ArtifactName: content

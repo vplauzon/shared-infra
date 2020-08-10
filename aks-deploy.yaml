@@ -7,6 +7,11 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     environment:  ${{ parameters.environment }}
+    variables:
+      statelessRg:  'shared-stateless-${{ parameters.environment }}'
+      statefulRg:  'shared-state-${{ parameters.environment }}'
+      cluster:  'shared-cluster-${{ parameters.environment }}'
+      dnsPrefix:  'vpl-aks-${{ parameters.environment }}'
     strategy:
       runOnce:
         deploy:
@@ -14,22 +19,21 @@ jobs:
           - download: current
             displayName:  Download scripts
             artifact: content
+          # Bash:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/bash
           - task: Bash@3
+            displayName:  Fetch Log Analytics
             inputs:
-              targetType: 'inline'
-              script:  'pwd'
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script:  'ls -l $(Pipeline.Workspace)/content'
+              targetType: 'filePath'
+              filePath:  $(Pipeline.Workspace)/content/fetch-log-analytics-id.sh
+              arguments:  $(statefulRg)
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
             inputs:
               azureSubscription: shared-infra
-              resourceGroupName: shared-stateless-${{ parameters.environment }}
+              resourceGroupName: $(statelessRg)
               location: eastus
               templateLocation: 'Linked artifact'
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
-              #csmParametersFile: $(Pipeline.Workspace)/shared-infra-simple.json
-              #overrideParameters: # Optional
+              #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
+              overrideParameters: -dnsPrefix $(dnsPrefix) -logAnalyticsId $(laid) -clusterName $(cluster)

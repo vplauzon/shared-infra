@@ -2,8 +2,8 @@ parameters:
   environment:  ''
   targetVersion:  ''
 jobs:
-  - deployment:  tag
-    displayName: Tag latest version
+  - deployment:  'deploy-aks-${{ parameters.environment }}'
+    displayName: 'Deploy AKS in ${{ parameters.environment }}'
     pool:
       vmImage: 'ubuntu-latest'
     environment:  ${{ parameters.environment }}
@@ -13,7 +13,7 @@ jobs:
           steps:
           - download: current
             displayName:  Download scripts
-            artifact: scripts
+            artifact: content
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
             inputs:

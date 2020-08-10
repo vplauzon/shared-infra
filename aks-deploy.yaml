@@ -20,7 +20,7 @@ jobs:
               azureSubscription: shared-infra
               resourceGroupName: shared-stateless-${{ parameters.environment }}
               location: eastus
-              templateLocation: 'Linked Artifact'
+              templateLocation: 'Linked artifact'
               csmFile: $(Pipeline.Workspace)/shared-infra-simple.json
               #csmParametersFile: $(Pipeline.Workspace)/shared-infra-simple.json
               #overrideParameters: # Optional

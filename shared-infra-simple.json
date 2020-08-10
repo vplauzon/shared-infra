@@ -45,6 +45,9 @@
             "apiVersion": "2020-04-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "kubernetesVersion": "[variables('Kubernetes Version')]",
                 "dnsPrefix": "[parameters('dnsPrefix')]",
@@ -56,9 +59,6 @@
                         }
                     }
                 },
-                "servicePrincipalProfile": {
-                    "clientId": "msi"
-                },
                 "agentPoolProfiles": [
                     {
                         "name": "agentpool",
@@ -66,7 +66,9 @@
                         "vmSize": "[variables('VM Size')]",
                         "maxPods": "[variables('Max Pods')]",
                         "osType": "Linux",
-                        "storageProfile": "ManagedDisks"
+                        "storageProfile": "ManagedDisks",
+                        "type": "VirtualMachineScaleSets",
+                        "mode": "System"
                     }
                 ],
                 "networkProfile": {

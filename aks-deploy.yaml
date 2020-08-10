@@ -1,0 +1,27 @@
+parameters:
+  environment:  ''
+  targetVersion:  ''
+jobs:
+  - deployment:  tag
+    displayName: Tag latest version
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment:  ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            displayName:  Download scripts
+            artifact: scripts
+          # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
+          - task: AzureResourceGroupDeployment@2
+            inputs:
+              azureSubscription: shared-infra
+              resourceGroupName: shared-stateless-${{ parameters.environment }}
+              location: eastus
+              templateLocation: 'Linked Artifact'
+              csmFile: $(Pipeline.Workspace)/shared-infra-simple.json
+              #csmParametersFile: $(Pipeline.Workspace)/shared-infra-simple.json
+              #overrideParameters: # Optional
+              deploymentMode: 'Incremental'

@@ -32,3 +32,11 @@ stages:
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/content'
           ArtifactName: content
+  - stage: Dev
+    displayName: Dev
+    dependsOn:  Build
+    jobs:
+      - template: aks-deploy.yaml
+        parameters:
+          environment:  dev
+          targetVersion:  experimental

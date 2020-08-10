@@ -2,7 +2,7 @@ parameters:
   environment:  ''
   targetVersion:  ''
 jobs:
-  - deployment:  'deploy-aks-${{ parameters.environment }}'
+  - deployment:  'deploy_aks_${{ parameters.environment }}'
     displayName: 'Deploy AKS in ${{ parameters.environment }}'
     pool:
       vmImage: 'ubuntu-latest'

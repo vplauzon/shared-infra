@@ -30,7 +30,7 @@
         }
     },
     "variables": {
-        "Kubernetes Version": "1.13.10",
+        "Kubernetes Version": "1.17.9",
         "Max Pods": 100,
         "Pod Cidr": "10.16.0.0/16",
         "Cluster-IPs Service Cidr": "10.0.0.0/16",

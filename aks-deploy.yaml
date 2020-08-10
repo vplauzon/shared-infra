@@ -20,11 +20,14 @@ jobs:
             displayName:  Download scripts
             artifact: content
           # Bash:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/bash
-          - task: Bash@3
+          # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
+          - task: AzureCLI@2
             displayName:  Fetch Log Analytics
             inputs:
-              targetType: 'filePath'
-              filePath:  $(Pipeline.Workspace)/content/fetch-log-analytics-id.sh
+              azureSubscription: shared-infra
+              scriptType:  'bash/pscore'
+              scriptLocation: 'scriptPath'
+              scriptPath:  $(Pipeline.Workspace)/content/fetch-log-analytics-id.sh
               arguments:  $(statefulRg)
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2

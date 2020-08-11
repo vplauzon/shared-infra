@@ -43,7 +43,7 @@ jobs:
               azureSubscription: shared-infra
               scriptType:  'bash'
               scriptLocation: 'inlineScript'
-              inlineScript:  "-dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId $(laid) -clusterName '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
+              inlineScript:  "echo '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' $(laid) '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
             inputs:
@@ -54,7 +54,7 @@ jobs:
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: "echo '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' $(laid) '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
+              overrideParameters: "-dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId $(laid) -clusterName '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:

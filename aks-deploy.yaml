@@ -52,4 +52,3 @@ jobs:
           - task: HelmInstaller@1
             inputs:
               helmVersionToInstall: 'latest'
-shared-cluster-blue-dev

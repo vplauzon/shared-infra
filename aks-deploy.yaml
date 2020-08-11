@@ -19,14 +19,18 @@ jobs:
           - download: current
             displayName:  Download scripts
             artifact: content
-          # Bash:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/bash
-          - task: Bash@3
-            inputs:
-              targetType: inline
-              #script: 'ls -l $(Pipeline.Workspace)/content'
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
-            displayName:  Fetch Log Analytics
+            displayName:  Fetch colour
+            inputs:
+              azureSubscription: shared-infra
+              scriptType:  'bash'
+              scriptLocation: 'scriptPath'
+              scriptPath:  $(Pipeline.Workspace)/content/fetch-colour.sh
+              arguments:  $(statefulRg)
+          # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
+          - task: AzureCLI@2
+            displayName:  Fetch Log Analytics ID
             inputs:
               azureSubscription: shared-infra
               scriptType:  'bash'
@@ -44,3 +48,8 @@ jobs:
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
               overrideParameters: -dnsPrefix $(dnsPrefix) -logAnalyticsId $(laid) -clusterName $(cluster)
+          # Helm tool installer
+          # Install Helm on an agent machine
+          - task: HelmInstaller@1
+            inputs:
+              #helmVersionToInstall: 'latest' # Optional             

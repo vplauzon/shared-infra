@@ -9,7 +9,7 @@ jobs:
     environment:  ${{ parameters.environment }}
     variables:
       statefulRg:  'shared-state-${{ parameters.environment }}'
-      statelessRgPrefix:  'shared'
+      statelessRgPrefix:  'shared-stateless'
       clusterPrefix:  'cluster'
       dnsPrefix:  'vpl-aks'
     strategy:
@@ -37,13 +37,6 @@ jobs:
               scriptLocation: 'scriptPath'
               scriptPath:  $(Pipeline.Workspace)/content/fetch-log-analytics-id.sh
               arguments:  $(statefulRg)
-          - task: AzureCLI@2
-            displayName:  printf
-            inputs:
-              azureSubscription: shared-infra
-              scriptType:  'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript:  "echo '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' $(laid) '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
             inputs:
@@ -54,8 +47,7 @@ jobs:
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: "-dnsPrefix mine19845 -logAnalyticsId $(laid) -clusterName vpl983"
-              # overrideParameters: "-dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId '$(laid)' -clusterName '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
+              overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:

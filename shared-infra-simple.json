@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "mainIp": {
+            "metadata": {
+                "description": "Name of the Main IP"
+            },
+            "type": "string"
+        },
         "dnsPrefix": {
             "metadata": {
                 "description": "DNS Prefix for the cluster"
@@ -39,6 +45,25 @@
         "VM Size": "Standard_B2ms"
     },
     "resources": [
+        {
+            "name": "[parameters('mainIp')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2018-08-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "publicIPAddressVersion": "IPv4",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('mainIp')]"
+                },
+                "ipTags": []
+            },
+            "zones": []
+        },
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "name": "[parameters('clusterName')]",

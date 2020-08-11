@@ -10,7 +10,8 @@ jobs:
     variables:
       statefulRg:  'shared-state-${{ parameters.environment }}'
       statelessRgPrefix:  'shared-stateless'
-      clusterPrefix:  'cluster'
+      clusterPrefix:  'vpl-cluster'
+      ipPrefix:  'vpl-main-ip'
       dnsPrefix:  'vpl-aks'
     strategy:
       runOnce:
@@ -47,8 +48,26 @@ jobs:
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
+              overrideParameters: "-mainIp $(ipPrefix)-$(colour)-${{ parameters.environment }} -dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
+          # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
+          - task: AzureCLI@2
+            displayName:  Determine IP
+            inputs:
+              azureSubscription: shared-infra
+              scriptType:  'bash'
+              scriptLocation: 'scriptPath'
+              scriptPath:  $(Pipeline.Workspace)/content/determine-ip.sh
+              arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(ipPrefix)-$(colour)-${{ parameters.environment }}"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:
               helmVersionToInstall: 'latest'
+          # Helm deploy:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
+          - task: HelmDeploy@0
+            displayName: NGinx
+            inputs:
+              azureSubscriptionEndpoint: shared-infra
+              azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
+              kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
+              command: upgrade
+              arguments: --install --set rbac.create=false --set controller.replicaCount=2 --set controller.service.loadBalancerIP=$ip --wait main-ingress stable/nginx-ingress

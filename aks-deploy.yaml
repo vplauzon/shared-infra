@@ -48,8 +48,7 @@ jobs:
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
               overrideParameters: -dnsPrefix $(dnsPrefix) -logAnalyticsId $(laid) -clusterName $(cluster)
-          # Helm tool installer
-          # Install Helm on an agent machine
+          # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:
-              #helmVersionToInstall: 'latest' # Optional             
+              helmVersionToInstall: 'latest'

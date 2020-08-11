@@ -9,7 +9,7 @@ jobs:
     environment:  ${{ parameters.environment }}
     variables:
       statefulRg:  'shared-state-${{ parameters.environment }}'
-      statelessRgPrefix:  'shared-stateless'
+      statelessRgPrefix:  'shared'
       clusterPrefix:  'cluster'
       dnsPrefix:  'vpl-aks'
     strategy:

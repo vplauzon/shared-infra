@@ -64,13 +64,13 @@ jobs:
               helmVersionToInstall: 'latest'
           # Helm deploy:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
           - task: HelmDeploy@0
-            displayName: repo update
+            displayName: repo add
             inputs:
               azureSubscriptionEndpoint: shared-infra
               azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
               kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
               command: repo
-              arguments: update
+              arguments: add stable https://kubernetes-charts.storage.googleapis.com/
           # Helm deploy:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
           - task: HelmDeploy@0
             displayName: NGinx

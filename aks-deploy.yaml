@@ -54,7 +54,8 @@ jobs:
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: "-dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId '$(laid)' -clusterName '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
+              overrideParameters: "-dnsPrefix mine19845 -logAnalyticsId '$(laid)' -clusterName vpl983"
+              # overrideParameters: "-dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId '$(laid)' -clusterName '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:

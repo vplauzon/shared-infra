@@ -8,10 +8,10 @@ jobs:
       vmImage: 'ubuntu-latest'
     environment:  ${{ parameters.environment }}
     variables:
-      statelessRg:  'shared-stateless-${{ parameters.environment }}'
       statefulRg:  'shared-state-${{ parameters.environment }}'
-      cluster:  'shared-cluster-${{ parameters.environment }}'
-      dnsPrefix:  'vpl-aks-${{ parameters.environment }}'
+      statelessRgPrefix:  'shared-stateless'
+      clusterPrefix:  'shared-cluster'
+      dnsPrefix:  'vpl-aks'
     strategy:
       runOnce:
         deploy:
@@ -41,13 +41,13 @@ jobs:
           - task: AzureResourceGroupDeployment@2
             inputs:
               azureSubscription: shared-infra
-              resourceGroupName: $(statelessRg)
+              resourceGroupName: '$(statelessRg)-$(colour)-${{ parameters.environment }}'
               location: eastus
               templateLocation: 'Linked artifact'
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: -dnsPrefix $(dnsPrefix) -logAnalyticsId $(laid) -clusterName $(cluster)
+              overrideParameters: -dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId $(laid) -clusterName '$(cluster)-$(colour)-${{ parameters.environment }}'
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:

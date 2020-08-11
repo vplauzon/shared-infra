@@ -70,4 +70,4 @@ jobs:
               azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
               kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
               command: upgrade
-              arguments: --install --set rbac.create=false --set controller.replicaCount=2 --set controller.service.loadBalancerIP=$ip --wait main-ingress stable/nginx-ingress
+              arguments: --install --set rbac.create=false --set controller.replicaCount=2 --set controller.service.loadBalancerIP=$ip --wait main-ingress --chartName stable/nginx-ingress

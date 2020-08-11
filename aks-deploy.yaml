@@ -10,7 +10,7 @@ jobs:
     variables:
       statefulRg:  'shared-state-${{ parameters.environment }}'
       statelessRgPrefix:  'shared-stateless'
-      clusterPrefix:  'shared-cluster'
+      clusterPrefix:  'cluster'
       dnsPrefix:  'vpl-aks'
     strategy:
       runOnce:
@@ -52,3 +52,4 @@ jobs:
           - task: HelmInstaller@1
             inputs:
               helmVersionToInstall: 'latest'
+shared-cluster-blue-dev

@@ -69,7 +69,8 @@ jobs:
               azureSubscriptionEndpoint: shared-infra
               azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
               kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
-              command: repo update
+              command: repo
+              arguments: update
           # Helm deploy:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
           - task: HelmDeploy@0
             displayName: NGinx

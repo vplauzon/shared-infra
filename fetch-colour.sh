@@ -14,7 +14,7 @@ rg=$1
 
 echo "Resource group:  $rg"
 
-colour=$(az group show --name $rg --query tags.deploy-colour -o tsv)
+colour=$(az group show --name $rg --query "tags['deploy-colour']" -o tsv)
 
 echo "Colour:  $colour"
 

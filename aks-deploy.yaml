@@ -41,13 +41,13 @@ jobs:
           - task: AzureResourceGroupDeployment@2
             inputs:
               azureSubscription: shared-infra
-              resourceGroupName: '$(statelessRg)-$(colour)-${{ parameters.environment }}'
+              resourceGroupName: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
               location: eastus
               templateLocation: 'Linked artifact'
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: -dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId $(laid) -clusterName '$(cluster)-$(colour)-${{ parameters.environment }}'
+              overrideParameters: -dnsPrefix '$(dnsPrefix)-$(colour)-${{ parameters.environment }}' -logAnalyticsId $(laid) -clusterName '$(clusterPrefix)-$(colour)-${{ parameters.environment }}'
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:

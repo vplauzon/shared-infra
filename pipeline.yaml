@@ -41,7 +41,7 @@ stages:
           environment:  dev
   - stage: Prod
     displayName: Prod
-    dependsOn:  Build
+    dependsOn:  Dev
     jobs:
       - template: aks-deploy.yaml
         parameters:

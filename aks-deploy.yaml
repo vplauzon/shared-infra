@@ -57,7 +57,7 @@ jobs:
               azureSubscription: shared-infra
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/set-ip.sh
+              scriptPath:  $(Pipeline.Workspace)/content/set-ip-dns-label.sh
               arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(clusterPrefix)-$(colour)-${{ parameters.environment }} $(ipPrefix)-$(colour)-${{ parameters.environment }}"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1

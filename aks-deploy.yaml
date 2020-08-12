@@ -40,6 +40,7 @@ jobs:
               arguments:  $(statefulRg)
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
+            displayName:  Deploy AKS
             inputs:
               azureSubscription: shared-infra
               resourceGroupName: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
@@ -48,7 +49,28 @@ jobs:
               csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: "-mainIp $(ipPrefix)-$(colour)-${{ parameters.environment }} -dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
+              overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
+          # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
+          - task: AzureCLI@2
+            displayName:  Fetch Node Resource Group
+            inputs:
+              azureSubscription: shared-infra
+              scriptType:  'bash'
+              scriptLocation: 'scriptPath'
+              scriptPath:  $(Pipeline.Workspace)/content/determine-node-group-simple.sh
+              arguments:  $(statefulRg) $(clusterPrefix)-$(colour)-${{ parameters.environment }}
+          # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
+          - task: AzureResourceGroupDeployment@2
+            displayName:  Deploy Main IP
+            inputs:
+              azureSubscription: shared-infra
+              resourceGroupName: $(nrg)
+              location: eastus
+              templateLocation: 'Linked artifact'
+              csmFile: $(Pipeline.Workspace)/content/main-ip.json
+              #csmParametersFile: #Not using it here
+              deploymentMode: 'Incremental'
+              overrideParameters: "-mainIp $(ipPrefix)-$(colour)-${{ parameters.environment }}"
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
             displayName:  Determine IP
@@ -57,7 +79,7 @@ jobs:
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
               scriptPath:  $(Pipeline.Workspace)/content/determine-ip.sh
-              arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(ipPrefix)-$(colour)-${{ parameters.environment }}"
+              arguments:  "$(nrg) $(ipPrefix)-$(colour)-${{ parameters.environment }}"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:
@@ -82,5 +104,5 @@ jobs:
               install:  true
               chartName:  stable/nginx-ingress
               releaseName:  main-ingress
-              arguments: --set rbac.create=false --set controller.replicaCount=2 --wait
+              arguments: --set rbac.create=false --set controller.replicaCount=2 --set controller.service.loadBalancerIP=$(ip) --wait
               timeoutInMinutes: 10

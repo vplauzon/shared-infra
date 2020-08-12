@@ -22,21 +22,21 @@ jobs:
             artifact: content
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
-            displayName:  Fetch colour
+            displayName:  Fetch deployment colour
             inputs:
               azureSubscription: shared-infra
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/fetch-colour.sh
+              scriptPath:  $(Pipeline.Workspace)/content/get-deploy-colour.sh
               arguments:  $(statefulRg)
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
-            displayName:  Fetch Log Analytics ID
+            displayName:  Get Log Analytics ID
             inputs:
               azureSubscription: shared-infra
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/fetch-log-analytics-id.sh
+              scriptPath:  $(Pipeline.Workspace)/content/get-log-analytics-id.sh
               arguments:  $(statefulRg)
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
@@ -46,7 +46,7 @@ jobs:
               resourceGroupName: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
               location: eastus
               templateLocation: 'Linked artifact'
-              csmFile: $(Pipeline.Workspace)/content/shared-infra-simple.json
+              csmFile: $(Pipeline.Workspace)/content/shared-infra.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
               overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"

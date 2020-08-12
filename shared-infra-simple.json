@@ -102,9 +102,6 @@
                     "serviceCidr": "[variables('Cluster-IPs Service Cidr')]",
                     "dnsServiceIP": "[variables('Dns Service IP')]",
                     "dockerBridgeCidr": "[variables('Docker Bridge Cidr')]"
-                },
-                "aadProfile": {
-                    "managed": true
                 }
             }
         }

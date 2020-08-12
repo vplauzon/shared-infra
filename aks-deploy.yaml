@@ -104,5 +104,5 @@ jobs:
               install:  true
               chartName:  stable/nginx-ingress
               releaseName:  main-ingress
-              arguments: --set rbac.create=false --set controller.replicaCount=2 --set controller.service.loadBalancerIP=$(ip) --wait
+              arguments: --namespace ingress-basic --set controller.replicaCount=2 --set controller.service.loadBalancerIP=$(ip) --wait
               timeoutInMinutes: 10

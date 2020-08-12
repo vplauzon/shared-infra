@@ -23,4 +23,4 @@ ipid=$(az aks show --resource-group $rg -n $cluster --query networkProfile.loadB
 echo "Public IP ID:  $ipid"
 
 #   Set the DNS Label
-az network public-ip update --ids $ipid --public-ip-prefix $label
+az network public-ip update --ids '$ipid' --public-ip-prefix $label

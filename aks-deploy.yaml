@@ -58,7 +58,7 @@ jobs:
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
               scriptPath:  $(Pipeline.Workspace)/content/determine-node-group-simple.sh
-              arguments:  $(statefulRg) $(clusterPrefix)-$(colour)-${{ parameters.environment }}
+              arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
           # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
           - task: AzureResourceGroupDeployment@2
             displayName:  Deploy Main IP

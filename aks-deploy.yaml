@@ -52,34 +52,13 @@ jobs:
               overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
-            displayName:  Fetch Node Resource Group
+            displayName:  Set IP's DNS label
             inputs:
               azureSubscription: shared-infra
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/determine-node-group-simple.sh
-              arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
-          # ARM Deployment:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment
-          - task: AzureResourceGroupDeployment@2
-            displayName:  Deploy Main IP
-            inputs:
-              azureSubscription: shared-infra
-              resourceGroupName: $(nrg)
-              location: eastus
-              templateLocation: 'Linked artifact'
-              csmFile: $(Pipeline.Workspace)/content/main-ip.json
-              #csmParametersFile: #Not using it here
-              deploymentMode: 'Incremental'
-              overrideParameters: "-mainIp $(ipPrefix)-$(colour)-${{ parameters.environment }}"
-          # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
-          - task: AzureCLI@2
-            displayName:  Determine IP
-            inputs:
-              azureSubscription: shared-infra
-              scriptType:  'bash'
-              scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/determine-ip.sh
-              arguments:  "$(nrg) $(ipPrefix)-$(colour)-${{ parameters.environment }}"
+              scriptPath:  $(Pipeline.Workspace)/content/set-ip.sh
+              arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(clusterPrefix)-$(colour)-${{ parameters.environment }} $(ipPrefix)-$(colour)-${{ parameters.environment }}"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:

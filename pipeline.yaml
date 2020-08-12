@@ -39,4 +39,10 @@ stages:
       - template: aks-deploy.yaml
         parameters:
           environment:  dev
-          targetVersion:  experimental
+  - stage: Prod
+    displayName: Prod
+    dependsOn:  Build
+    jobs:
+      - template: aks-deploy.yaml
+        parameters:
+          environment:  prod

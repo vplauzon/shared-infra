@@ -1,6 +1,5 @@
 parameters:
   environment:  ''
-  targetVersion:  ''
 jobs:
   - deployment:  'deploy_aks_${{ parameters.environment }}'
     displayName: 'Deploy AKS in ${{ parameters.environment }}'

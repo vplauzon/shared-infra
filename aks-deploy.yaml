@@ -79,7 +79,7 @@ jobs:
               kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
               command: upgrade
               install:  true
-              chartName:  stable/nginx-ingress
+              chartName:  stable/ingress-nginx
               releaseName:  main-ingress
               arguments: --set controller.replicaCount=2 --wait
               timeoutInMinutes: 10

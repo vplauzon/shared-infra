@@ -27,7 +27,6 @@ jobs:
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
               scriptPath:  $(Pipeline.Workspace)/content/get-deploy-colour.sh
-              arguments:  $(statefulRg)
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
             displayName:  Get Log Analytics ID

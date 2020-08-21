@@ -1,18 +1,12 @@
 #!/bin/bash
 
 ###################################################################################################
-### Fetch the colour to deploy from resource group tag (deploy-colour)
-###
-### Inputs:
-###     resource group name:  name of the resource group to get the colour tag from
+### Fetch the colour to deploy from the DNS resource group tag (deploy-colour)
 ###
 ### Outputs:
 ###     colour:  colour of the environment (blue or green)
 
-#   Bind script parameters
-rg=$1
-
-echo "Resource group:  $rg"
+rg=vpl-dns
 
 colour=$(az group show --name $rg --query "tags.deployColour" -o tsv)
 

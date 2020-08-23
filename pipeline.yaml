@@ -3,7 +3,8 @@
 resources:
 - repo: self
 
-variables:  []
+variables:
+- colour:  blue
 
 trigger:
 - master

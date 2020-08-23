@@ -8,10 +8,10 @@ jobs:
     environment:  ${{ parameters.environment }}
     variables:
       statefulRg:  'shared-state-${{ parameters.environment }}'
-      statelessRgPrefix:  'shared-stateless'
-      clusterPrefix:  'vpl-cluster'
-      ipPrefix:  'vpl-main-ip'
-      dnsPrefix:  'vpl-aks'
+      statelessRgPrefix:  'shared-stateless-${{ parameters.environment }}'
+      clusterPrefix:  'vpl-cluster-${{ parameters.environment }}'
+      ipPrefix:  'vpl-main-ip-${{ parameters.environment }}'
+      dnsPrefix:  'vpl-aks-${{ parameters.environment }}'
     strategy:
       runOnce:
         deploy:
@@ -21,12 +21,13 @@ jobs:
             artifact: content
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
-            displayName:  Fetch deployment colour
+            displayName:  Set deployment colour
             inputs:
               azureSubscription: shared-infra
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/get-deploy-colour.sh
+              scriptPath:  $(Pipeline.Workspace)/content/set-deploy-colour.sh
+              arguments:  $(colour)
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
             displayName:  Get Log Analytics ID
@@ -41,13 +42,13 @@ jobs:
             displayName:  Deploy AKS
             inputs:
               azureSubscription: shared-infra
-              resourceGroupName: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
+              resourceGroupName: '$(statelessRgPrefix)-$(colour)'
               location: eastus
               templateLocation: 'Linked artifact'
               csmFile: $(Pipeline.Workspace)/content/shared-infra.json
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
-              overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour)-${{ parameters.environment }} -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)-${{ parameters.environment }}"
+              overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour) -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)"
           # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
           - task: AzureCLI@2
             displayName:  Set IP's DNS label
@@ -56,7 +57,7 @@ jobs:
               scriptType:  'bash'
               scriptLocation: 'scriptPath'
               scriptPath:  $(Pipeline.Workspace)/content/set-ip-dns-label.sh
-              arguments:  "$(statelessRgPrefix)-$(colour)-${{ parameters.environment }} $(clusterPrefix)-$(colour)-${{ parameters.environment }} $(ipPrefix)-$(colour)-${{ parameters.environment }}"
+              arguments:  "$(statelessRgPrefix)-$(colour) $(clusterPrefix)-$(colour) $(ipPrefix)-$(colour)"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:
@@ -66,8 +67,8 @@ jobs:
             displayName: repo add stable
             inputs:
               azureSubscriptionEndpoint: shared-infra
-              azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
-              kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
+              azureResourceGroup: '$(statelessRgPrefix)-$(colour)'
+              kubernetesCluster: $(clusterPrefix)-$(colour)
               command: repo
               arguments: add stable https://kubernetes-charts.storage.googleapis.com/
           # Helm deploy:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
@@ -75,8 +76,8 @@ jobs:
             displayName: repo add ingress-nginx
             inputs:
               azureSubscriptionEndpoint: shared-infra
-              azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
-              kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
+              azureResourceGroup: '$(statelessRgPrefix)-$(colour)'
+              kubernetesCluster: $(clusterPrefix)-$(colour)
               command: repo
               arguments: add ingress-nginx https://kubernetes.github.io/ingress-nginx
           # Helm deploy:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
@@ -84,8 +85,8 @@ jobs:
             displayName: NGinx
             inputs:
               azureSubscriptionEndpoint: shared-infra
-              azureResourceGroup: '$(statelessRgPrefix)-$(colour)-${{ parameters.environment }}'
-              kubernetesCluster: $(clusterPrefix)-$(colour)-${{ parameters.environment }}
+              azureResourceGroup: '$(statelessRgPrefix)-$(colour)'
+              kubernetesCluster: $(clusterPrefix)-$(colour)
               command: upgrade
               install:  true
               chartName:  ingress-nginx/ingress-nginx

@@ -16,6 +16,8 @@ jobs:
       runOnce:
         deploy:
           steps:
+          # Don't checkout repo
+          - checkout: none
           - download: current
             displayName:  Download scripts
             artifact: content
@@ -49,15 +51,6 @@ jobs:
               #csmParametersFile: #Not using it here
               deploymentMode: 'Incremental'
               overrideParameters: "-dnsPrefix $(dnsPrefix)-$(colour) -logAnalyticsId $(laid) -clusterName $(clusterPrefix)-$(colour)"
-          # Azure CLI:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
-          - task: AzureCLI@2
-            displayName:  Set IP's DNS label
-            inputs:
-              azureSubscription: shared-infra
-              scriptType:  'bash'
-              scriptLocation: 'scriptPath'
-              scriptPath:  $(Pipeline.Workspace)/content/set-ip-dns-label.sh
-              arguments:  "$(statelessRgPrefix)-$(colour) $(clusterPrefix)-$(colour) $(ipPrefix)-$(colour)"
           # Helm tool installer:  https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/helm-installer
           - task: HelmInstaller@1
             inputs:
@@ -91,5 +84,5 @@ jobs:
               install:  true
               chartName:  ingress-nginx/ingress-nginx
               releaseName:  main-ingress
-              arguments: --set controller.replicaCount=2 --wait
+              arguments: --set controller.replicaCount=2 --set controller.service.loadBalancerIP="STATIC_IP" --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"="$(ipPrefix)-$(colour)" --wait
               timeoutInMinutes: 10

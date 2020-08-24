@@ -3,11 +3,11 @@
 resources:
 - repo: self
 
-variables:
-  colour:  green
-
 trigger:
 - master
+
+variables:
+  colour:  green
 
 stages:
   - stage:  build
